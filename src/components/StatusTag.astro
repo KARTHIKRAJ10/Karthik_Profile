@@ -1,0 +1,46 @@
+---
+import { statusHelp, statusLabel } from '../lib/utils';
+
+interface Props {
+  status: keyof typeof statusLabel;
+}
+const { status } = Astro.props;
+---
+
+<span class={`status status-${status}`} title={statusHelp[status]}>
+  <span class="mark" aria-hidden="true"></span>{statusLabel[status]}
+</span>
+
+<style>
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.1rem 0.5rem 0.1rem 0.4rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--ink-2);
+    background: var(--surface);
+    white-space: nowrap;
+  }
+  .mark {
+    width: 0.6rem;
+    height: 0.6rem;
+    border: 1.5px solid currentColor;
+    flex: none;
+  }
+  /* Each status has its own shape as well as colour. */
+  .status-verified { color: var(--ok); border-color: currentColor; }
+  .status-verified .mark { border-radius: 50%; background: currentColor; }
+  .status-reported .mark { background: currentColor; }
+  .status-estimated { color: var(--warn); }
+  .status-estimated .mark { transform: rotate(45deg); }
+  .status-simulated { color: var(--sim); border-style: dotted; border-color: currentColor; }
+  .status-simulated .mark { border-radius: 50%; border-style: dotted; }
+  .status-target .mark { border-radius: 50%; }
+  .status-draft { border-style: dashed; color: var(--ink-3); }
+  .status-draft .mark { border-style: dashed; }
+</style>

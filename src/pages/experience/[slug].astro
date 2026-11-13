@@ -1,0 +1,199 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionBlock from '../../components/SectionBlock.astro';
+import MetricCard from '../../components/MetricCard.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import DraftField from '../../components/DraftField.astro';
+import { site } from '../../data/site';
+import { byOrder, byStartDesc, dateRange, duration, href, techHref } from '../../lib/utils';
+
+export async function getStaticPaths() {
+  const entries = (await getCollection('experience')).sort(byStartDesc);
+  return entries.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, newer: entries[i - 1] ?? null, older: entries[i + 1] ?? null },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'experience'>;
+  newer: CollectionEntry<'experience'> | null;
+  older: CollectionEntry<'experience'> | null;
+}
+const { entry, newer, older } = Astro.props;
+const e = entry.data;
+const allProjects = await getCollection('projects');
+const related = allProjects.filter((p) => p.data.employer === entry.id).sort(byOrder);
+const projectTechs = new Set(allProjects.flatMap((p) => p.data.technologies));
+const metrics = e.achievements.filter((a) => site.showDrafts || a.status !== 'draft');
+---
+
+<BaseLayout title={`${e.role} at ${e.employer}`} description={e.summary} ogType="article">
+  <article>
+    <header class="wrap page-head">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href={href('/')}>Home</a></li>
+          <li><a href={href('/experience/')}>Experience</a></li>
+          <li aria-current="page">{e.employer}</li>
+        </ol>
+      </nav>
+      <h1>{e.employer}</h1>
+      {e.employerNote && <p class="muted">{e.employerNote}</p>}
+      <p class="lede">{e.summary}</p>
+      <dl class="facts">
+        <div>
+          <dt>Role</dt>
+          <dd>{e.role}{e.account && `, ${e.account}`}</dd>
+        </div>
+        <div>
+          <dt>Dates</dt>
+          <dd>{dateRange(e.start, e.end)} ({duration(e.start, e.end)})</dd>
+        </div>
+        <div>
+          <dt>Location</dt>
+          <dd>{e.location}</dd>
+        </div>
+        <div>
+          <dt>Industry</dt>
+          <dd>{e.industry}{e.industryNeedsConfirmation && site.showDrafts && ' (draft, to confirm)'}</dd>
+        </div>
+      </dl>
+    </header>
+
+    <div class="wrap body stack-lg">
+      <section aria-labelledby="context">
+        <h2 id="context">Business context and team objectives</h2>
+        <SectionBlock block={e.context} />
+      </section>
+
+      <section aria-labelledby="responsibilities">
+        <h2 id="responsibilities">What I was responsible for</h2>
+        <div class="prose">
+          <ul>
+            {e.responsibilities.map((r) => <li>{r}</li>)}
+          </ul>
+        </div>
+        <div class="split">
+          <h3>My contribution and the wider team</h3>
+          <SectionBlock block={e.contribution} />
+        </div>
+      </section>
+
+      <section aria-labelledby="problems">
+        <h2 id="problems">Problems investigated and decisions supported</h2>
+        <SectionBlock block={e.problems} />
+      </section>
+
+      <section aria-labelledby="tools">
+        <h2 id="tools">Tools and working methods</h2>
+        {
+          e.tools.length > 0 && (
+            <ul class="tag-list big">
+              {e.tools.map((t) =>
+                projectTechs.has(t) ? (
+                  <li>
+                    <a class="tag" href={techHref(t)}>
+                      {t}
+                    </a>
+                  </li>
+                ) : (
+                  <li class="tag">{t}</li>
+                ),
+              )}
+            </ul>
+          )
+        }
+        {
+          e.methods.length > 0 && (
+            <div class="prose">
+              <ul>
+                {e.methods.map((m) => (
+                  <li>{m}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </section>
+
+      <section aria-labelledby="achievements">
+        <h2 id="achievements">Achievements and how they were measured</h2>
+        {
+          metrics.length > 0 ? (
+            <div class="grid grid-2 metrics">
+              {metrics.map((m) => (
+                <MetricCard metric={m} />
+              ))}
+            </div>
+          ) : (
+            <p class="prose">No quantified achievements are recorded for this role.</p>
+          )
+        }
+      </section>
+
+      <section aria-labelledby="case-studies">
+        <h2 id="case-studies">Related case studies</h2>
+        {
+          related.length > 0 ? (
+            <div class="grid grid-2">
+              {related.map((p) => (
+                <ProjectCard project={p} employerName={e.employer} compact />
+              ))}
+            </div>
+          ) : (
+            <p class="prose">
+              No case study has been written for this role yet. <a href={href('/projects/')}>Browse all projects</a>.
+            </p>
+          )
+        }
+      </section>
+
+      <section aria-labelledby="skills">
+        <h2 id="skills">Skills demonstrated and lessons learned</h2>
+        <ul class="tag-list big">
+          {e.skills.map((s) => <li class="tag">{s}</li>)}
+        </ul>
+        {e.lessons.text && <p class="prose">{e.lessons.text}</p>}
+        <DraftField needs={e.lessons.needs} label="Draft. Lessons learned" />
+      </section>
+
+      <nav class="pager" aria-label="Other roles">
+        {
+          older ? (
+            <a href={href(`/experience/${older.id}/`)}>
+              <span class="small muted">Earlier role</span>
+              <span class="t">{older.data.employer}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          newer && (
+            <a class="next" href={href(`/experience/${newer.id}/`)}>
+              <span class="small muted">Later role</span>
+              <span class="t">{newer.data.employer}</span>
+            </a>
+          )
+        }
+      </nav>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .facts { margin: var(--space-6) 0 0; display: grid; gap: var(--space-4) var(--space-6); grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); border-top: 1px solid var(--line); padding-top: var(--space-5); }
+  .facts dt { font-size: var(--step--1); color: var(--ink-3); }
+  .facts dd { margin: 0; font-weight: 600; }
+  .body { padding-top: var(--space-5); }
+  section { display: grid; gap: var(--space-4); border-top: 1px solid var(--line); padding-top: var(--space-6); }
+  .split { display: grid; gap: var(--space-3); margin-top: var(--space-3); }
+  .big .tag { font-size: var(--step--1); padding: 0.25rem 0.7rem; }
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); border-top: 1px solid var(--line); padding-top: var(--space-6); }
+  .pager a { display: grid; gap: 0.2rem; text-decoration: none; padding: var(--space-4); border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+  .pager a:hover { border-color: var(--accent); }
+  .pager .t { font-weight: 650; color: var(--ink); }
+  .pager .next { text-align: right; }
+</style>

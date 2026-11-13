@@ -1,0 +1,83 @@
+title: Inventory discrepancy investigation and exception logging
+order: 5
+kind: professional
+status: in-progress
+employer: geodis
+period: Jul 2026 to present
+domains: [Operations]
+projectType: Operations analytics
+technologies: [GWMS, Exception logs, Reconciliation]
+preview: reconciliation
+card:
+  problem: When the system balance and the shelf disagree, ecommerce orders ship short or late.
+  solution: Reconcile physical stock against GWMS at SKU, quantity and location level, and log exceptions as evidence for root-cause follow-up.
+  result: Ongoing role. Accuracy figures not published.
+  resultStatus: draft
+summary:
+  problem: >-
+    Ecommerce fulfilment depends on the warehouse management system matching the
+    physical stock. Discrepancies cause shortages, incomplete orders and dispatch
+    delays.
+  solution: >-
+    I reconcile physical stock with GWMS balances, investigate shortages and order
+    exceptions across inventory control, picking, packing and dispatch, and maintain
+    exception logs for recurring variances.
+  outcome: >-
+    Corrections are coordinated as discrepancies are found, and the logs give
+    supervisors evidence for root-cause follow-up. No figures are published.
+context:
+  text: >-
+    A third-party logistics operation fulfilling ecommerce orders for an apparel
+    account. Supervisors and floor teams need to know which variances recur and why.
+contribution:
+  text: >-
+    Reconciliation, investigation and logging are mine. Corrections involve picking,
+    packing and dispatch teams, and supervisors own the follow-up.
+data:
+  points:
+    - GWMS balances by SKU, quantity and location.
+    - Physical counts.
+    - Picking and packing records.
+    - Exception logs for incomplete orders and recurring variances.
+  needs:
+    - Whether any anonymised or aggregated figures may be shared
+architecture:
+  caption: Investigation flow for a stock discrepancy.
+  stages:
+    - label: Physical count
+      detail: SKU, quantity, location
+    - label: GWMS balance
+      detail: System record
+    - label: Compare
+      detail: Variance identified
+    - label: Investigate
+      detail: Picking, packing, dispatch records
+    - label: Correct
+      detail: Coordinated with floor teams
+    - label: Log exception
+      detail: Evidence for root-cause follow-up
+implementation:
+  points:
+    - Each discrepancy is validated on three keys (SKU, quantity and location) before a correction is requested.
+    - Recurring variances are logged so that patterns show up across shifts and locations.
+validation:
+  points:
+    - Picking and packing records reviewed for accuracy.
+    - Unresolved issues communicated across teams rather than closed without a cause.
+results:
+  text: This is a current operational role. Performance figures belong to the employer and client and are not published here.
+metrics:
+  - name: Inventory accuracy or recurring variance rate
+    status: draft
+    needs:
+      - Employer permission to publish, then metric, period and population
+limitations:
+  points:
+    - Operational data is confidential.
+    - The work is manual investigation, not an automated analytics system.
+nextSteps:
+  - Build a public, synthetic-data version of variance pattern analysis as a separate independent project.
+evidence:
+  - label: Résumé entry for GEODIS
+    type: Résumé
+    note: Source for every statement on this page.

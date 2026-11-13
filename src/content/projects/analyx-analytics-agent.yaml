@@ -1,0 +1,108 @@
+title: "ANALYX: conversational ecommerce analytics agent"
+order: 6
+kind: independent
+status: completed
+domains: [Machine Learning, Marketing Analytics]
+projectType: LLM application
+technologies: [Python, FastAPI, PostgreSQL, pgvector, RAG, Claude API, Next.js, SQL]
+preview: agent
+card:
+  problem: Ecommerce teams wait on analysts for answers that are one SQL query away, and an LLM writing SQL unsupervised is not safe to trust.
+  solution: A conversational agent with hybrid BM25 and vector retrieval, a ten-layer SQL guardrail pipeline and built-in statistical tests.
+  result: Built across two phases. Evaluation figures not yet published.
+  resultStatus: draft
+summary:
+  problem: >-
+    Business users ask questions in plain language; the answers sit in a database. A
+    language model can bridge the two, but only if the SQL it writes is constrained and
+    the statistics it reports are computed, not guessed.
+  solution: >-
+    ANALYX answers ecommerce analytics questions in conversation. It retrieves context
+    with hybrid BM25 and vector search, passes generated SQL through a ten-layer
+    guardrail pipeline, and runs statistical engines (Welch's t-test, ANOVA,
+    Mann-Kendall trend test, STL decomposition) with a business guardrails layer on top.
+  outcome: >-
+    A working application built in two phases. Retrieval quality, SQL accuracy,
+    latency and cost per question have not been published yet.
+context:
+  text: >-
+    Independent portfolio project. The intended user is an ecommerce manager or
+    marketer who needs a trustworthy answer without writing SQL.
+contribution:
+  text: Sole author. Designed and built the backend, retrieval, guardrails, statistics and frontend.
+data:
+  needs:
+    - The dataset behind the demo (public dataset name or synthetic generator), with table list, row counts and date range
+    - Whether any figures shown in the demo are synthetic
+architecture:
+  caption: Request path from question to answer.
+  stages:
+    - label: Question
+      detail: Next.js chat interface
+    - label: Hybrid retrieval
+      detail: BM25 and pgvector
+    - label: SQL generation
+      detail: Claude API
+    - label: SQL guardrails
+      detail: Ten validation layers
+    - label: Query and statistics
+      detail: PostgreSQL, t-test, ANOVA, Mann-Kendall, STL
+    - label: Business guardrails
+      detail: Checks on the answer
+    - label: Response
+      detail: FastAPI to the interface
+implementation:
+  points:
+    - FastAPI backend, PostgreSQL with pgvector for storage and vector search, React and Next.js frontend.
+    - Hybrid retrieval combines keyword matching (BM25) with embedding similarity, so exact column and metric names are found as reliably as paraphrased questions.
+    - Statistical claims are computed by dedicated engines and not written by the language model.
+  needs:
+    - What each of the ten SQL guardrail layers checks
+    - What the business guardrails layer enforces
+details:
+  - title: Why statistics are computed outside the model
+    body: >-
+      A language model will describe a difference as significant whether or not it is.
+      Routing comparisons through Welch's t-test or ANOVA, trends through Mann-Kendall,
+      and seasonality through STL means the answer reports a test result that can be
+      reproduced from the query output.
+  - title: Retrieval evaluation still to publish
+    body: >-
+      Planned measures: recall at k and mean reciprocal rank on a labelled question set
+      for BM25 alone, vector alone and hybrid; execution accuracy of generated SQL
+      against reference queries; latency and token cost per question.
+validation:
+  points:
+    - Generated SQL passes through ten guardrail layers before it runs.
+  needs:
+    - Size and source of the evaluation question set
+    - Results for retrieval and SQL accuracy against a baseline
+results:
+  text: The application is built. Measured results will be added with their evaluation set and method.
+metrics:
+  - name: SQL execution accuracy on evaluation set
+    status: draft
+    needs:
+      - Number of questions, accuracy, and the baseline without guardrails
+  - name: Retrieval recall at k, hybrid against single-method
+    status: draft
+    needs:
+      - Labelled set size, k, and values for BM25, vector and hybrid
+  - name: Latency and cost per question
+    status: draft
+    needs:
+      - Median and 95th percentile latency, average tokens and cost
+limitations:
+  points:
+    - Independent project; not deployed with a production user base.
+    - No published evaluation yet.
+nextSteps:
+  - Publish the evaluation set and results.
+  - Link the repository and a recorded demo.
+evidence:
+  - label: Code repository
+    type: Repository
+    note: Add the GitHub URL.
+  - label: Demo recording
+    type: Demo
+    note: Add a link when recorded.

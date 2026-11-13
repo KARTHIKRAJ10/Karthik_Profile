@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ExperienceCard from '../../components/ExperienceCard.astro';
+import BarChart from '../../components/BarChart.astro';
+import { byStartDesc, dateRange, monthsBetween } from '../../lib/utils';
+
+const experience = (await getCollection('experience')).sort(byStartDesc);
+const projects = await getCollection('projects');
+const countFor = (id: string) => projects.filter((p) => p.data.employer === id).length;
+const domains = [...new Set(experience.flatMap((e) => e.data.domains))];
+
+const tenure = {
+  title: 'Time in each role',
+  description: 'Length of each position, most recent first. The current role is counted to the month this site was built.',
+  xLabel: 'Duration',
+  yLabel: 'Employer',
+  unit: 'months',
+  status: 'reported' as const,
+  source: 'Résumé start and end dates, counted inclusively.',
+  data: experience.map((e) => ({
+    label: e.data.employer,
+    value: monthsBetween(e.data.start, e.data.end),
+    note: `${e.data.role}, ${dateRange(e.data.start, e.data.end)}`,
+  })),
+};
+---
+
+<BaseLayout
+  title="Experience"
+  description="Roles in data analysis, analytics engineering and warehouse operations, each with responsibilities, tools and linked case studies."
+>
+  <div class="wrap page-head">
+    <h1>Experience</h1>
+    <p class="lede">
+      Three data roles in India, a graduate certificate in Ontario, and operations roles where the job is making system
+      records match physical stock.
+    </p>
+  </div>
+
+  <div class="wrap" data-filter-root data-filter-noun="roles">
+    <div class="filterbar">
+      <div class="chips" role="group" aria-label="Filter by domain" data-filter="domain">
+        <button type="button" class="chip" data-value="" aria-pressed="true">All domains</button>
+        {domains.map((d) => <button type="button" class="chip" data-value={d} aria-pressed="false">{d}</button>)}
+      </div>
+      <p class="small muted" data-filter-count aria-live="polite"></p>
+    </div>
+
+    <div class="grid grid-2">
+      {experience.map((e) => <ExperienceCard entry={e} caseStudies={countFor(e.id)} />)}
+    </div>
+    <div class="empty card" data-filter-empty hidden>
+      <p>No roles match this domain.</p>
+      <button type="button" class="btn" data-filter-reset>Show all roles</button>
+    </div>
+  </div>
+
+  <div class="wrap chart-wrap">
+    <BarChart chart={tenure} />
+  </div>
+</BaseLayout>
+
+<style>
+  .filterbar { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-5); align-items: center; justify-content: space-between; margin-bottom: var(--space-5); }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .chip {
+    min-height: 2.5rem;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: var(--step--1);
+    cursor: pointer;
+  }
+  .chip:hover { border-color: var(--ink); }
+  .chip[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: var(--bg); font-weight: 600; }
+  .empty { padding: var(--space-6); display: grid; gap: var(--space-4); justify-items: start; }
+  .chart-wrap { margin-top: var(--space-8); max-width: 52rem; margin-inline: auto; width: min(100% - 2.5rem, 52rem); }
+</style>
+
+<script>
+  import { initFilters } from '../../scripts/filters';
+  document.querySelectorAll<HTMLElement>('[data-filter-root]').forEach(initFilters);
+</script>

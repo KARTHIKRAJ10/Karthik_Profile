@@ -1,0 +1,115 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { byOrder, completionLabel, kindLabel } from '../../lib/utils';
+
+const projects = (await getCollection('projects')).sort(byOrder);
+const experience = await getCollection('experience');
+const employerName = (id?: string) => experience.find((e) => e.id === id)?.data.employer;
+const uniq = (values: string[]) => [...new Set(values)].sort((a, b) => a.localeCompare(b));
+
+const domains = uniq(projects.flatMap((p) => p.data.domains));
+const techs = uniq(projects.flatMap((p) => p.data.technologies));
+const types = uniq(projects.map((p) => p.data.projectType));
+const kinds = (Object.keys(kindLabel) as (keyof typeof kindLabel)[]).filter((k) => projects.some((p) => p.data.kind === k));
+const statuses = (Object.keys(completionLabel) as (keyof typeof completionLabel)[]).filter((s) =>
+  projects.some((p) => p.data.status === s),
+);
+---
+
+<BaseLayout
+  title="Projects"
+  description="Case studies in data integration, marketing analytics, customer analytics, forecasting and LLM applications. Professional work, independent projects and proposed concepts are labelled separately."
+>
+  <div class="wrap page-head">
+    <h1>Projects</h1>
+    <p class="lede">
+      Professional work, independent builds and proposed concepts, each labelled for what it is. Every result shows
+      where it came from.
+    </p>
+  </div>
+
+  <div class="wrap" data-filter-root data-filter-noun="projects">
+    <form class="filters card" role="search" aria-label="Filter projects" onsubmit="return false">
+      <label class="field search">
+        <span>Search</span>
+        <input type="search" data-filter-search placeholder="Try forecasting, dashboard or SQL" autocomplete="off" />
+      </label>
+      <label class="field">
+        <span>Business domain</span>
+        <select data-filter="domain">
+          <option value="">All domains</option>
+          {domains.map((d) => <option value={d}>{d}</option>)}
+        </select>
+      </label>
+      <label class="field">
+        <span>Technology</span>
+        <select data-filter="tech">
+          <option value="">All technologies</option>
+          {techs.map((t) => <option value={t}>{t}</option>)}
+        </select>
+      </label>
+      <label class="field">
+        <span>Project type</span>
+        <select data-filter="type">
+          <option value="">All types</option>
+          {types.map((t) => <option value={t}>{t}</option>)}
+        </select>
+      </label>
+      <label class="field">
+        <span>Source of work</span>
+        <select data-filter="kind">
+          <option value="">All sources</option>
+          {kinds.map((k) => <option value={k}>{kindLabel[k]}</option>)}
+        </select>
+      </label>
+      <label class="field">
+        <span>Completion</span>
+        <select data-filter="status">
+          <option value="">Any status</option>
+          {statuses.map((s) => <option value={s}>{completionLabel[s]}</option>)}
+        </select>
+      </label>
+      <div class="summary">
+        <p class="small" data-filter-count aria-live="polite"></p>
+        <button type="button" class="btn btn-quiet" data-filter-reset data-filter-reset-inline hidden>Clear filters</button>
+      </div>
+    </form>
+
+    <div class="grid grid-3 results">
+      {projects.map((p) => <ProjectCard project={p} employerName={employerName(p.data.employer)} />)}
+    </div>
+
+    <div class="empty card" data-filter-empty hidden>
+      <h2>No projects match</h2>
+      <p class="muted">Remove a filter or try a shorter search term.</p>
+      <button type="button" class="btn btn-primary" data-filter-reset>Clear filters</button>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .filters { padding: var(--space-4) var(--space-5) var(--space-5); display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr)); align-items: end; }
+  .field { display: grid; gap: 0.3rem; font-size: var(--step--1); font-weight: 600; color: var(--ink-2); }
+  .search { grid-column: 1 / -1; }
+  input, select {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 400;
+  }
+  .summary { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; justify-content: space-between; min-height: 2.75rem; }
+  .results { margin-top: var(--space-6); }
+  .empty { margin-top: var(--space-5); padding: var(--space-7) var(--space-6); display: grid; gap: var(--space-3); justify-items: start; }
+</style>
+
+<script>
+  import { initFilters } from '../../scripts/filters';
+  document.querySelectorAll<HTMLElement>('[data-filter-root]').forEach(initFilters);
+</script>

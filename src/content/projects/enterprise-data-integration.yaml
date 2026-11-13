@@ -1,0 +1,126 @@
+title: Five-source data integration and KPI deviation diagnostics
+order: 1
+kind: professional
+status: completed
+employer: neurealm
+period: Nov 2022 to Apr 2023
+domains: [Data Engineering, Analytics and Reporting]
+projectType: Data pipeline
+technologies: [SQL, Python, Excel, JIRA]
+preview: pipeline
+card:
+  problem: Recurring performance reports depended on five separate enterprise sources that had to agree before anyone could trust a KPI.
+  solution: SQL and Python workflows that validate each input, integrate the sources and produce analysis-ready datasets, with Excel reconciliation for exceptions.
+  result: Five enterprise sources integrated into validated reporting datasets.
+  resultStatus: reported
+summary:
+  problem: >-
+    Performance reporting drew on five enterprise data sources. Without consistent
+    validation and integration, a KPI movement could be a real change or a data fault,
+    and nobody could tell which.
+  solution: >-
+    I built SQL and Python workflows that validate inputs, integrate the five sources
+    and output datasets for recurring analysis, backed by Excel reconciliation
+    workbooks and documented root-cause investigations of KPI deviations.
+  outcome: >-
+    Validated datasets for recurring performance reporting, with investigation findings
+    documented for business and technical stakeholders. No quantified outcome has been
+    recorded yet.
+context:
+  text: >-
+    Business and technical stakeholders reviewed performance on a recurring cycle. They
+    needed figures that tied back to source systems, and an explanation whenever a KPI
+    moved unexpectedly.
+  needs:
+    - Which function or client used the reports, anonymised if needed
+    - The decisions the reports informed (for example service reviews or capacity planning)
+contribution:
+  text: >-
+    I built the integration workflows and reconciliation workbooks, ran the KPI
+    investigations, and maintained the JIRA records. I validated the workflows against
+    business requirements together with developers.
+  needs:
+    - Names or roles of collaborators and who owned the downstream reports
+data:
+  points:
+    - Five enterprise source systems feeding one set of reporting datasets.
+    - Inputs validated before integration.
+  needs:
+    - Type of each source (database, API, file export) and the entities it held
+    - Row counts or data volume, time period covered and refresh frequency
+    - Known quality issues (duplicates, late records, mismatched keys)
+architecture:
+  caption: Flow reconstructed from the résumé description. Source names and scheduling are not yet documented.
+  stages:
+    - label: Five enterprise sources
+      detail: Source systems to be named
+    - label: Extraction
+      detail: SQL and Python
+    - label: Input validation
+      detail: Checks before integration
+    - label: Integration
+      detail: Combined reporting datasets
+    - label: Reconciliation
+      detail: Excel workbooks and exception logs
+    - label: Performance reporting
+      detail: Recurring analysis and KPI reviews
+  needs:
+    - How the workflows were scheduled or triggered
+    - Where the output datasets were stored
+implementation:
+  points:
+    - SQL and Python workflows handle extraction, validation and integration.
+    - Excel workbooks with PivotTables, lookups and exception logs compare records across systems and isolate the ones that disagree.
+    - Stakeholder requirements were translated into analytical tasks and tracked in JIRA with dependencies, validation evidence and issue status.
+  needs:
+    - The specific validation rules applied (schema, nulls, ranges, referential checks)
+    - Any platform used (for example Azure Databricks or BigQuery), if applicable to this role
+details:
+  - title: How a KPI deviation was investigated
+    body: >-
+      Exploratory analysis first, to see whether the deviation was concentrated in a
+      source, period or segment; then root-cause diagnostics to separate a genuine
+      business change from a data issue. Findings were written up for both business and
+      technical readers. Add one worked example here.
+validation:
+  points:
+    - Inputs validated before they entered the integration step.
+    - Records reconciled across systems, with discrepancies written to exception logs.
+    - Workflows checked against business requirements with developers before business use.
+  needs:
+    - Pass and fail thresholds, and what happened when a check failed
+results:
+  text: >-
+    The workflows produced the datasets used for recurring performance analysis, and
+    data issues were resolved before business use. Quantified results have not been
+    recorded.
+metrics:
+  - name: Enterprise data sources integrated
+    value: "5"
+    unit: sources
+    method: Count of distinct source systems
+    source: Résumé
+    status: reported
+  - name: Report preparation time
+    status: draft
+    needs:
+      - Hours per reporting cycle before and after the workflows
+      - Measurement period and who measured it
+  - name: Data issues caught before reporting
+    status: draft
+    needs:
+      - Count of discrepancies logged per cycle and how many were resolved
+limitations:
+  points:
+    - Work was done on employer systems, so code and data cannot be shared.
+    - Orchestration, latency and cost details are not documented here yet.
+nextSteps:
+  - Add an anonymised example of one KPI investigation from deviation to finding.
+  - Rebuild the pattern on public data as a companion project (see the dbt pipeline concept).
+evidence:
+  - label: Résumé entry for Neurealm
+    type: Résumé
+    note: Source for every statement on this page.
+  - label: Code repository
+    type: Repository
+    note: Not available. Employer-owned work.

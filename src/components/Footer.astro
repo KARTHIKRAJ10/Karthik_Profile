@@ -1,0 +1,44 @@
+---
+import { navigation, site } from '../data/site';
+import { href } from '../lib/utils';
+---
+
+<footer class="site-footer">
+  <div class="wrap inner">
+    <div>
+      <p class="name">{site.name}</p>
+      <p class="muted small">{site.location}</p>
+    </div>
+    <ul class="links">
+      {navigation.map((item) => <li><a href={href(item.path)}>{item.label}</a></li>)}
+    </ul>
+    <ul class="links">
+      {site.email && <li><a href={`mailto:${site.email}`}>Email</a></li>}
+      {site.linkedin && <li><a href={site.linkedin} rel="me noopener">LinkedIn</a></li>}
+      {site.github && <li><a href={site.github} rel="me noopener">GitHub</a></li>}
+    </ul>
+  </div>
+  <div class="wrap">
+    <p class="muted small note">
+      Every figure on this site carries an evidence status. Nothing is published as a result until its source is recorded.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+    padding-block: var(--space-7) var(--space-6);
+    margin-top: var(--space-8);
+  }
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5) var(--space-8);
+  }
+  .inner > div { margin-right: auto; }
+  .name { font-weight: 650; }
+  .links { list-style: none; display: grid; gap: 0.35rem; }
+  .links a { color: var(--ink-2); }
+  .note { margin-top: var(--space-6); max-width: 40rem; }
+</style>

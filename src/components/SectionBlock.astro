@@ -1,0 +1,23 @@
+---
+import DraftField from './DraftField.astro';
+
+interface Props {
+  block: { text?: string; points: string[]; needs: string[] };
+}
+const { block } = Astro.props;
+---
+
+<div class="prose">
+  {block.text && <p>{block.text}</p>}
+  {
+    block.points.length > 0 && (
+      <ul>
+        {block.points.map((p) => (
+          <li>{p}</li>
+        ))}
+      </ul>
+    )
+  }
+  <slot />
+  <DraftField needs={block.needs} />
+</div>

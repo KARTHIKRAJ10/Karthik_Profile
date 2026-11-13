@@ -1,0 +1,65 @@
+title: Ecommerce recommendation system demo
+order: 9
+kind: independent
+status: completed
+domains: [Machine Learning, Marketing Analytics]
+projectType: Recommender system
+technologies: [Python, Streamlit, Next.js, TypeScript]
+preview: recommender
+usesSyntheticData: true
+card:
+  problem: Comparing recommendation approaches is hard to explain without something a reviewer can click through.
+  solution: A Streamlit demo running five in-memory recommendation models on synthetic data, with a Next.js front-end component and an integration guide.
+  result: Demonstration on synthetic data. Not a measure of real-world performance.
+  resultStatus: simulated
+summary:
+  problem: >-
+    Recommendation methods trade off differently on new users, popular items and
+    catalogue coverage. A static write-up does not show that.
+  solution: >-
+    A Streamlit application that runs five recommendation models in memory on synthetic
+    data so they can be compared side by side, plus a Next.js and TypeScript front-end
+    component and an integration README.
+  outcome: A working demonstration. All data is synthetic, so the outputs illustrate behaviour and are not performance claims.
+context:
+  text: Independent portfolio project built to demonstrate recommender methods.
+contribution:
+  text: Sole author.
+data:
+  points:
+    - Synthetic users, items and interactions generated for the demo.
+  needs:
+    - How the synthetic data is generated and its size
+architecture:
+  caption: Demo structure.
+  stages:
+    - label: Synthetic interactions
+      detail: Generated data
+    - label: Five models
+      detail: Run in memory
+    - label: Streamlit demo
+      detail: Side-by-side comparison
+    - label: Front-end component
+      detail: Next.js and TypeScript
+implementation:
+  needs:
+    - The five models (for example popularity, item-based collaborative filtering, matrix factorisation, content-based, hybrid)
+    - How the front-end component consumes recommendations
+validation:
+  needs:
+    - Offline metrics on a held-out split of the synthetic data (precision at k, recall at k, coverage), with a popularity baseline
+results:
+  text: Outputs come from synthetic data and are shown for demonstration only.
+limitations:
+  points:
+    - Synthetic data does not reproduce real purchase behaviour.
+    - In-memory models are not sized for a production catalogue.
+nextSteps:
+  - Evaluate on a public dataset with a time-based split.
+evidence:
+  - label: Code repository
+    type: Repository
+    note: Add the GitHub URL.
+  - label: Streamlit demo
+    type: Demo
+    note: Add the link.

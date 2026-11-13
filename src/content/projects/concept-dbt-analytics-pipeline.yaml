@@ -1,0 +1,54 @@
+title: Reliable analytics pipeline with SQL, dbt and orchestration
+order: 21
+kind: concept
+status: proposed
+domains: [Data Engineering]
+projectType: Data pipeline
+technologies: [SQL, dbt, BigQuery, Python]
+preview: pipeline
+card:
+  problem: The integration work at Neurealm cannot be shown, so there is no public proof of the pipeline skills behind it.
+  solution: "Proposed: rebuild the validate, integrate and reconcile pattern on public data with dbt tests, scheduled runs and freshness checks."
+  result: Proposed concept. Not started.
+  resultStatus: target
+summary:
+  problem: Employer-owned pipelines cannot be published, which leaves the data engineering work without inspectable evidence.
+  solution: >-
+    Proposed: a small warehouse on public ecommerce data with staging, intermediate and
+    mart models in dbt, schema and reconciliation tests, a scheduled run, and
+    documentation of failure handling, latency and cost.
+  outcome: Not started. This page describes a plan.
+context:
+  text: Proposed independent companion to the five-source integration case study.
+contribution:
+  text: Would be sole author.
+data:
+  points:
+    - "Candidate: a public multi-table ecommerce dataset such as the Olist Brazilian ecommerce data."
+architecture:
+  caption: Planned pipeline.
+  stages:
+    - label: Raw sources
+    - label: Staging models
+      detail: Typed and renamed
+    - label: Tests
+      detail: Uniqueness, nulls, relationships, reconciliation
+    - label: Marts
+      detail: Orders, customers, revenue
+    - label: Scheduled run
+      detail: GitHub Actions or an orchestrator
+    - label: Dashboard
+implementation:
+  points:
+    - Source freshness checks and a reconciliation test comparing mart totals with raw totals.
+    - Run time and query cost recorded per run.
+validation:
+  points:
+    - dbt tests must pass before marts are built.
+results:
+  text: None. Proposed work.
+limitations:
+  points:
+    - A public batch dataset does not exercise late-arriving or streaming data.
+nextSteps:
+  - Choose the dataset and warehouse, then scaffold the dbt project.

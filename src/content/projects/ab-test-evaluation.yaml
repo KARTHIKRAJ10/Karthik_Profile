@@ -1,0 +1,91 @@
+title: A/B test evaluation for website improvements
+order: 3
+kind: professional
+status: completed
+employer: the-prink
+period: Sep 2020 to Oct 2022
+domains: [Marketing Analytics]
+projectType: Experimentation
+technologies: [A/B testing, GA4, Shopify, Excel]
+preview: experiment
+card:
+  problem: Website changes were being proposed without a consistent way to tell whether a variant really performed better.
+  solution: Evaluated A/B tests and performance scenarios, compared audience outcomes and turned the findings into recommendations.
+  result: Recommendations for website improvements delivered. Effect sizes not yet documented.
+  resultStatus: draft
+summary:
+  problem: >-
+    The business needed to know which website changes improved commercial performance
+    and for which audiences, before committing to them.
+  solution: >-
+    I evaluated A/B tests and performance scenarios, compared outcomes across
+    audiences, and translated the findings into recommendations for website
+    improvements and commercial optimisation.
+  outcome: >-
+    Recommendations were delivered to stakeholders. Test-level results (metric, lift,
+    sample size) have not been documented on this page yet.
+context:
+  text: Stakeholders deciding on website and campaign changes for an ecommerce store.
+  needs:
+    - What was being tested (for example landing page, checkout step, offer)
+    - Who ran the tests and who decided on rollout
+contribution:
+  text: I evaluated the tests and wrote the recommendations.
+  needs:
+    - Whether you also designed the tests or only analysed them
+data:
+  points:
+    - Audience-level outcomes for test variants.
+  needs:
+    - Primary metric and guardrail metrics
+    - Sample size per variant, test duration and traffic allocation
+    - Source of outcome data (GA4 events, Shopify orders)
+architecture:
+  caption: Evaluation flow. Tooling for assignment and tracking is not yet documented.
+  stages:
+    - label: Hypothesis
+      detail: Change proposed and metric chosen
+    - label: Variant exposure
+      detail: Audiences split
+    - label: Outcome data
+      detail: Collected per variant
+    - label: Comparison
+      detail: Audience outcomes evaluated
+    - label: Recommendation
+      detail: Keep, change or drop
+  needs:
+    - The testing tool used and how users were assigned to variants
+implementation:
+  points:
+    - Outcomes compared across audiences so that a result driven by one segment was not read as a general effect.
+    - Performance scenarios evaluated alongside tests where a controlled test was not possible.
+  needs:
+    - Statistical method used (for example two-proportion z-test, t-test, Bayesian estimate)
+    - Significance threshold and whether tests ran to a pre-set sample size
+validation:
+  needs:
+    - Sample ratio check between variants
+    - How novelty effects, seasonality and overlapping campaigns were handled
+    - Whether results were re-checked after rollout
+results:
+  text: Findings were translated into recommendations for website improvements. No effect sizes are published here until the underlying figures are confirmed.
+metrics:
+  - name: Tests evaluated
+    status: draft
+    needs:
+      - Number of tests and the period
+  - name: Lift on primary metric for an adopted change
+    status: draft
+    needs:
+      - Control and variant values, sample sizes, confidence interval, test dates
+limitations:
+  points:
+    - Scenario comparisons that are not randomised show association, not causal effect.
+    - Test data belongs to the employer and cannot be shared.
+nextSteps:
+  - Add one fully documented test once figures are confirmed.
+  - Build the marketing incrementality concept on public data to show the method end to end.
+evidence:
+  - label: Résumé entry for The Prink
+    type: Résumé
+    note: Source for every statement on this page.

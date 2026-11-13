@@ -1,0 +1,175 @@
+---
+/**
+ * Horizontal bar chart with labelled axes, tooltips and a data table.
+ * Renders only the values it is given. Do not feed it interpolated or
+ * illustrative numbers unless `status` is "simulated".
+ */
+import StatusTag from './StatusTag.astro';
+import type { statusLabel } from '../lib/utils';
+
+interface Props {
+  chart: {
+    title: string;
+    description?: string;
+    xLabel: string;
+    yLabel: string;
+    unit: string;
+    status: keyof typeof statusLabel;
+    source: string;
+    data: { label: string; value: number; note?: string }[];
+  };
+}
+const { chart } = Astro.props;
+
+function niceMax(v: number): { max: number; step: number } {
+  const rough = v / 4;
+  const pow = Math.pow(10, Math.floor(Math.log10(rough || 1)));
+  const step = [1, 2, 2.5, 5, 10].map((m) => m * pow).find((s) => s >= rough) ?? pow * 10;
+  return { max: Math.ceil(v / step) * step, step };
+}
+const { max, step } = niceMax(Math.max(...chart.data.map((d) => d.value)));
+const ticks = Array.from({ length: Math.round(max / step) + 1 }, (_, i) => i * step);
+const id = `chart-${chart.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+---
+
+<figure class="chart card" data-chart>
+  <figcaption>
+    <div class="head">
+      <h3 id={id}>{chart.title}</h3>
+      <StatusTag status={chart.status} />
+    </div>
+    {chart.description && <p class="muted small">{chart.description}</p>}
+  </figcaption>
+
+  <div class="plot" role="group" aria-labelledby={id}>
+    <p class="axis-title y">{chart.yLabel}</p>
+    <ul class="rows" style={`--ticks:${ticks.length - 1}`}>
+      {
+        chart.data.map((d) => (
+          <li
+            class="row"
+            tabindex="0"
+            data-tip={`${d.label}: ${d.value} ${chart.unit}${d.note ? `. ${d.note}` : ''}`}
+          >
+            <span class="name">{d.label}</span>
+            <span class="track">
+              <span class="bar" style={`width:${((d.value / max) * 100).toFixed(2)}%`} />
+              <span class="val" style={`left:${((d.value / max) * 100).toFixed(2)}%`}>{d.value}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="x-axis" aria-hidden="true">
+      <span></span>
+      <div class="ticks">
+        {ticks.map((t) => <span style={`left:${((t / max) * 100).toFixed(2)}%`}>{t}</span>)}
+      </div>
+    </div>
+    <p class="axis-title x">
+      {chart.xLabel} ({chart.unit})
+    </p>
+    <div class="tip" role="status" hidden></div>
+  </div>
+
+  <p class="source small muted">Source: {chart.source}</p>
+
+  <details>
+    <summary>View as table</summary>
+    <table>
+      <caption class="visually-hidden">{chart.title}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{chart.yLabel}</th>
+          <th scope="col" class="num">{chart.xLabel} ({chart.unit})</th>
+          <th scope="col">Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          chart.data.map((d) => (
+            <tr>
+              <th scope="row">{d.label}</th>
+              <td class="num">{d.value}</td>
+              <td>{d.note ?? ''}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </details>
+</figure>
+
+<style>
+  .chart { margin: 0; padding: var(--space-5); display: grid; gap: var(--space-4); }
+  .head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-2) var(--space-4); align-items: flex-start; }
+  h3 { font-size: var(--step-1); }
+  .plot { position: relative; --name: 11rem; }
+  .axis-title { font-size: 0.8125rem; color: var(--ink-3); }
+  .axis-title.y { margin-bottom: var(--space-2); }
+  .axis-title.x { margin-left: calc(var(--name) + var(--space-3)); margin-top: 0.2rem; }
+  .rows { list-style: none; display: grid; gap: 6px; }
+  .row { display: grid; grid-template-columns: var(--name) 1fr; gap: var(--space-3); align-items: center; padding-block: 2px; border-radius: 3px; cursor: default; }
+  .row:hover .bar, .row:focus-visible .bar { background: var(--ink); }
+  .name { font-size: var(--step--1); color: var(--ink-2); text-align: right; line-height: 1.25; }
+  .track {
+    position: relative;
+    height: 1.25rem;
+    margin-right: 2.5rem;
+    background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
+    background-size: calc(100% / var(--ticks)) 100%;
+    border-right: 1px solid var(--line);
+  }
+  .bar { position: absolute; inset: 0 auto 0 0; background: var(--accent); border-radius: 0 4px 4px 0; min-width: 2px; transition: background-color 0.12s; }
+  .val { position: absolute; top: 50%; translate: 0.4rem -50%; font-size: 0.8125rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .x-axis { display: grid; grid-template-columns: var(--name) 1fr; gap: var(--space-3); }
+  .ticks { position: relative; height: 1.4rem; margin-right: 2.5rem; font-size: 0.75rem; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .ticks span { position: absolute; top: 0.3rem; translate: -50% 0; }
+  .tip {
+    position: absolute;
+    z-index: 5;
+    max-width: 16rem;
+    padding: 0.4rem 0.6rem;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    border-radius: var(--radius-sm);
+    pointer-events: none;
+  }
+  details { border-top: 1px solid var(--line); padding-top: var(--space-3); font-size: var(--step--1); }
+  summary { font-weight: 600; color: var(--accent); width: fit-content; }
+  details table { margin-top: var(--space-3); }
+  @media (max-width: 40rem) {
+    .plot { --name: 6.5rem; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-chart]').forEach((chart) => {
+    const plot = chart.querySelector<HTMLElement>('.plot');
+    const tip = chart.querySelector<HTMLElement>('.tip');
+    if (!plot || !tip) return;
+
+    const show = (row: HTMLElement, clientX?: number) => {
+      tip.textContent = row.dataset.tip ?? '';
+      tip.hidden = false;
+      const p = plot.getBoundingClientRect();
+      const r = row.getBoundingClientRect();
+      const track = row.querySelector<HTMLElement>('.track')!.getBoundingClientRect();
+      const x = clientX ?? track.left + 12;
+      const left = Math.min(Math.max(x - p.left + 12, 0), p.width - tip.offsetWidth);
+      tip.style.left = `${left}px`;
+      tip.style.top = `${r.bottom - p.top + 4}px`;
+    };
+    const hide = () => (tip.hidden = true);
+
+    chart.querySelectorAll<HTMLElement>('.row').forEach((row) => {
+      row.addEventListener('pointermove', (e) => show(row, e.clientX));
+      row.addEventListener('pointerleave', hide);
+      row.addEventListener('focus', () => show(row));
+      row.addEventListener('blur', hide);
+      row.addEventListener('keydown', (e) => e.key === 'Escape' && hide());
+    });
+  });
+</script>

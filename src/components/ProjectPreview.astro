@@ -1,0 +1,173 @@
+---
+/**
+ * Schematic illustration for a project card. These are diagrams of the kind
+ * of work, never plots of data, so they carry no numbers or axes.
+ */
+interface Props {
+  type: 'pipeline' | 'dashboard' | 'experiment' | 'segments' | 'reconciliation' | 'agent' | 'forecast' | 'recommender';
+}
+const { type } = Astro.props;
+const dots = (cx: number, cy: number, pts: number[][]) => pts.map(([dx, dy]) => [cx + dx, cy + dy]);
+const c1 = dots(84, 92, [[0, 0], [14, -10], [-12, 8], [8, 14], [-16, -8], [20, 6], [-4, -18], [4, 26]]);
+const c2 = dots(176, 54, [[0, 0], [12, 8], [-14, 4], [6, -12], [-8, -10], [18, -4], [-2, 16]]);
+const c3 = dots(248, 108, [[0, 0], [-12, -8], [10, -12], [14, 8], [-8, 12], [2, -22]]);
+---
+
+<svg class="preview" viewBox="0 0 320 160" role="img" aria-label={`Schematic illustration: ${type}`}>
+  <rect class="bg" width="320" height="160"></rect>
+
+  {
+    type === 'pipeline' && (
+      <g>
+        {[20, 46, 72, 98, 124].map((y) => (
+          <>
+            <rect class="box" x="22" y={y - 8} width="50" height="16" rx="2" />
+            <path class="wire" d={`M72 ${y} C100 ${y} 96 76 122 76`} />
+          </>
+        ))}
+        <rect class="box strong" x="122" y="58" width="56" height="36" rx="3" />
+        <path class="tick" d="M140 76l7 7 13-14" />
+        <path class="wire" d="M178 76h36" />
+        <rect class="box fill" x="214" y="52" width="84" height="48" rx="3" />
+        <path class="onfill" d="M226 66h60M226 76h60M226 86h36" />
+      </g>
+    )
+  }
+
+  {
+    type === 'dashboard' && (
+      <g>
+        <rect class="box" x="22" y="20" width="84" height="34" rx="3" />
+        <rect class="box" x="118" y="20" width="84" height="34" rx="3" />
+        <rect class="box" x="214" y="20" width="84" height="34" rx="3" />
+        <path class="thick" d="M32 32h28M128 32h28M224 32h28" />
+        <path class="wire" d="M32 44h50M128 44h44M224 44h54" />
+        <rect class="box" x="22" y="66" width="180" height="74" rx="3" />
+        <path class="line" d="M34 122l24-14 22 8 26-26 24 10 26-22 34-8" />
+        <rect class="box" x="214" y="66" width="84" height="74" rx="3" />
+        {[0, 1, 2, 3].map((i) => (
+          <rect class="bar" x="226" y={78 + i * 14} width={[60, 44, 32, 18][i]} height="8" rx="2" />
+        ))}
+      </g>
+    )
+  }
+
+  {
+    type === 'experiment' && (
+      <g>
+        <path class="wire" d="M40 132h240" />
+        <text class="lbl" x="104" y="150" text-anchor="middle">Control</text>
+        <text class="lbl" x="216" y="150" text-anchor="middle">Variant</text>
+        <rect class="box" x="80" y="70" width="48" height="62" rx="3" />
+        <rect class="box fill" x="192" y="48" width="48" height="84" rx="3" />
+        <path class="thick" d="M104 56v28M94 56h20M94 84h20" />
+        <path class="thick" d="M216 30v36M206 30h20M206 66h20" />
+      </g>
+    )
+  }
+
+  {
+    type === 'segments' && (
+      <g>
+        {c1.map(([x, y]) => <circle class="dot a" cx={x} cy={y} r="5" />)}
+        {c2.map(([x, y]) => <circle class="dot b" cx={x} cy={y} r="5" />)}
+        {c3.map(([x, y]) => <circle class="dot c" cx={x} cy={y} r="5" />)}
+        <ellipse class="hull" cx="86" cy="94" rx="40" ry="38" />
+        <ellipse class="hull" cx="178" cy="54" rx="36" ry="30" />
+        <ellipse class="hull" cx="250" cy="104" rx="32" ry="34" />
+      </g>
+    )
+  }
+
+  {
+    type === 'reconciliation' && (
+      <g>
+        <text class="lbl" x="76" y="24" text-anchor="middle">System</text>
+        <text class="lbl" x="244" y="24" text-anchor="middle">Counted</text>
+        {[0, 1, 2, 3].map((i) => (
+          <>
+            <rect class={`box ${i === 2 ? 'strong' : ''}`} x="26" y={36 + i * 28} width="100" height="18" rx="2" />
+            <rect class={`box ${i === 2 ? 'strong' : ''}`} x="194" y={36 + i * 28} width="100" height="18" rx="2" />
+            <path class={i === 2 ? 'miss' : 'wire'} d={`M126 ${45 + i * 28}h68`} />
+            {i !== 2 && <path class="tick sm" d={`M154 ${45 + i * 28}l4 4 8-9`} />}
+          </>
+        ))}
+        <path class="thick" d="M154 96l12 10M166 96l-12 10" />
+      </g>
+    )
+  }
+
+  {
+    type === 'agent' && (
+      <g>
+        <path class="box" d="M22 52h70a4 4 0 0 1 4 4v34a4 4 0 0 1-4 4H50l-14 12V94H22a4 4 0 0 1-4-4V56a4 4 0 0 1 4-4Z" />
+        <path class="wire" d="M30 66h54M30 78h36" />
+        <path class="wire" d="M96 74h26" />
+        {[0, 1, 2, 3, 4].map((i) => (
+          <rect class={`box ${i === 4 ? 'strong' : ''}`} x={122 + i * 14} y={40 + i * 3} width="10" height={70 - i * 6} rx="2" />
+        ))}
+        <path class="wire" d="M196 74h30" />
+        <ellipse class="box fill" cx="262" cy="50" rx="34" ry="10" />
+        <path class="box fillside" d="M228 50v48c0 5.5 15 10 34 10s34-4.500 34-10V50" />
+        <path class="onfill" d="M228 74c0 5.500 15 10 34 10s34-4.500 34-10" />
+      </g>
+    )
+  }
+
+  {
+    type === 'forecast' && (
+      <g>
+        <path class="wire" d="M24 136h272" />
+        <path class="band" d="M190 70 L296 30 L296 104 Z" />
+        <path class="line ink" d="M24 110l18-16 16 22 18-30 16 18 18-28 16 20 18-34 16 24 14-6" />
+        <path class="line dash" d="M190 70 L296 66" />
+        <path class="wire dashv" d="M190 22v114" />
+        <text class="lbl" x="104" y="152" text-anchor="middle">History</text>
+        <text class="lbl" x="244" y="152" text-anchor="middle">Forecast</text>
+      </g>
+    )
+  }
+
+  {
+    type === 'recommender' && (
+      <g>
+        <circle class="box strong" cx="52" cy="80" r="20" />
+        <circle class="thick nofill" cx="52" cy="74" r="6" />
+        <path class="thick" d="M40 92c3-8 21-8 24 0" />
+        <path class="wire" d="M72 80h34" />
+        {[0, 1, 2, 3].map((col) =>
+          [0, 1, 2].map((row) => (
+            <rect class={`box ${(col + row * 2) % 5 === 0 ? 'fill' : ''}`} x={112 + col * 48} y={22 + row * 42} width="38" height="32" rx="3" />
+          )),
+        )}
+      </g>
+    )
+  }
+</svg>
+
+<style>
+  .preview { width: 100%; height: auto; border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0; }
+  .bg { fill: var(--surface-2); }
+  .box { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1.2; }
+  .box.strong { stroke: var(--accent); stroke-width: 2; }
+  .box.fill, .bar { fill: var(--accent); stroke: var(--accent); }
+  .fillside { fill: var(--accent); stroke: var(--accent); }
+  .wire { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
+  .wire.dashv { stroke-dasharray: 3 4; }
+  .thick { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+  .nofill { fill: none; }
+  .onfill { fill: none; stroke: var(--accent-ink); stroke-width: 1.6; stroke-linecap: round; opacity: 0.85; }
+  .tick { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .tick.sm { stroke-width: 1.8; }
+  .miss { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-dasharray: 3 3; }
+  .line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .line.ink { stroke: var(--ink-2); }
+  .line.dash { stroke-dasharray: 5 4; }
+  .band { fill: var(--accent); opacity: 0.16; }
+  .dot { stroke: var(--surface-2); stroke-width: 1.5; }
+  .dot.a { fill: var(--accent); }
+  .dot.b { fill: var(--ink-2); }
+  .dot.c { fill: var(--surface); stroke: var(--ink); }
+  .hull { fill: none; stroke: var(--line-strong); stroke-dasharray: 3 4; }
+  .lbl { fill: var(--ink-2); font-family: var(--font-ui); font-size: 10px; }
+</style>

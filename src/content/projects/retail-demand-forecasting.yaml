@@ -1,0 +1,104 @@
+title: Retail demand forecasting and inventory risk assistant
+order: 7
+kind: independent
+status: in-progress
+domains: [Machine Learning, Operations]
+projectType: Forecasting
+technologies: [Python, LightGBM, Time-series forecasting, Hugging Face Spaces]
+preview: forecast
+card:
+  problem: A forecast is only useful to a planner if it says which items are at risk of stock-out or overstock.
+  solution: Global LightGBM models on the Walmart M5 dataset with walk-forward validation, scored on WAPE and bias, feeding an inventory risk score.
+  result: In progress. No results published yet.
+  resultStatus: draft
+summary:
+  problem: >-
+    Retail planners need item-level demand forecasts they can act on: which products
+    to reorder, which are heading for a stock-out, and where the forecast tends to run
+    high or low.
+  solution: >-
+    Global LightGBM models trained across item-store series in the public Walmart M5
+    dataset, evaluated by walk-forward validation on WAPE and forecast bias, with an
+    inventory risk score built on the forecasts. Planned deployment on Hugging Face
+    Spaces.
+  outcome: In progress. Results will be published with their validation windows and baseline.
+context:
+  text: >-
+    Independent portfolio project using public data. The intended user is an inventory
+    or demand planner.
+contribution:
+  text: Sole author.
+data:
+  points:
+    - "Walmart M5 Forecasting dataset (public, Kaggle): daily unit sales for 3,049 products across 10 stores in California, Texas and Wisconsin, giving 30,490 item-store series."
+    - 1,941 days of history from January 2011 to June 2016, with calendar events and weekly sell prices.
+    - Many series are intermittent, with long runs of zero sales.
+  needs:
+    - Whether the project uses the full dataset or a subset
+architecture:
+  caption: Planned pipeline.
+  stages:
+    - label: M5 sales, calendar, prices
+      detail: Public dataset
+    - label: Feature engineering
+      detail: Lags, rolling statistics, calendar, price
+    - label: Global LightGBM
+      detail: One model across series
+    - label: Walk-forward validation
+      detail: WAPE and bias per window
+    - label: Inventory risk score
+      detail: Stock-out and overstock risk
+    - label: Assistant
+      detail: Hugging Face Spaces
+implementation:
+  points:
+    - A global model learns across all item-store series, which helps sparse series borrow strength from similar ones.
+    - Forecast bias is tracked alongside WAPE, because a forecast that is consistently high or low costs money even when its average error looks acceptable.
+  needs:
+    - Final feature list and forecast horizon
+    - How the inventory risk score is calculated
+details:
+  - title: Leakage prevention
+    body: >-
+      Lag and rolling features must use only data available at forecast time. With a
+      28-day horizon, a lag shorter than the horizon leaks future sales unless forecasts
+      are generated recursively. Walk-forward validation trains on the past and tests
+      on the following window, repeated across several cut-off dates, so no test period
+      is ever seen in training.
+  - title: Baseline
+    body: >-
+      Results should be reported against a seasonal naive forecast (same weekday in the
+      previous week) on identical validation windows. Add the baseline figures when
+      available.
+validation:
+  points:
+    - Walk-forward validation across multiple cut-off dates.
+    - WAPE for accuracy and forecast bias for direction of error.
+  needs:
+    - Number of validation windows and their dates
+    - Baseline results on the same windows
+results:
+  text: No results are published until the validation runs are complete.
+metrics:
+  - name: WAPE against seasonal naive baseline
+    status: draft
+    needs:
+      - Baseline and model WAPE, aggregation level, validation windows
+  - name: Forecast bias
+    status: draft
+    needs:
+      - Bias by store or category across validation windows
+limitations:
+  points:
+    - Public dataset ending in 2016; no live inventory positions, so the risk score rests on stated assumptions about stock and lead time.
+    - Unit sales are censored by stock-outs, which understates true demand.
+nextSteps:
+  - Complete validation runs and publish results with the baseline.
+  - Deploy the assistant and link the repository.
+evidence:
+  - label: Code repository
+    type: Repository
+    note: Add the GitHub URL.
+  - label: Hugging Face Space
+    type: Demo
+    note: Add the link once deployed.

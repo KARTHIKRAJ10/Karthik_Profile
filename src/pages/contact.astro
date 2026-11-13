@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+import { href } from '../lib/utils';
+import { resumeUrl } from '../lib/resume';
+
+const resume = resumeUrl();
+---
+
+<BaseLayout title="Contact" description={`Contact ${site.name} by email, LinkedIn or GitHub.`}>
+  <div class="wrap page-head">
+    <h1>Contact</h1>
+    <p class="lede">{site.availability} Email is the fastest way to reach me.</p>
+  </div>
+
+  <div class="wrap">
+    <ul class="channels">
+      {
+        site.email && (
+          <li class="card">
+            <h2>Email</h2>
+            <p class="value">
+              <a href={`mailto:${site.email}`}>{site.email}</a>
+            </p>
+            <div class="btn-row">
+              <a class="btn btn-primary" href={`mailto:${site.email}`}>
+                Write an email
+              </a>
+              <button type="button" class="btn" data-copy={site.email}>
+                Copy address
+              </button>
+            </div>
+            <p class="small muted" data-copy-status role="status"></p>
+          </li>
+        )
+      }
+      {
+        site.linkedin && (
+          <li class="card">
+            <h2>LinkedIn</h2>
+            <p class="value">
+              <a href={site.linkedin} rel="me noopener">
+                {site.linkedin.replace('https://www.', '')}
+              </a>
+            </p>
+          </li>
+        )
+      }
+      {
+        site.github && (
+          <li class="card">
+            <h2>GitHub</h2>
+            <p class="value">
+              <a href={site.github} rel="me noopener">
+                {site.github.replace('https://', '')}
+              </a>
+            </p>
+          </li>
+        )
+      }
+    </ul>
+
+    <p class="after">
+      Based in {site.location}.{' '}
+      {resume ? <a href={resume} download>Download my résumé</a> : <a href={href('/resume/')}>Read my résumé</a>} or{' '}
+      <a href={href('/projects/')}>browse the case studies</a>.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .channels { list-style: none; display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+  .channels li { padding: var(--space-5); display: grid; gap: var(--space-3); align-content: start; }
+  h2 { font-size: var(--step-1); color: var(--ink-2); font-weight: 600; }
+  .value { font-size: var(--step-1); font-weight: 600; overflow-wrap: anywhere; }
+  .after { margin-top: var(--space-6); color: var(--ink-2); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const status = button.closest('li')?.querySelector<HTMLElement>('[data-copy-status]');
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy ?? '');
+        if (status) status.textContent = 'Address copied.';
+      } catch {
+        if (status) status.textContent = 'Copying is blocked in this browser. Select the address above instead.';
+      }
+    });
+  });
+</script>

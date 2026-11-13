@@ -1,0 +1,69 @@
+employer: Neurealm
+employerNote: formerly GAVS Technologies
+role: Application Engineer
+start: "2022-11"
+end: "2023-04"
+location: Chennai, India
+industry: IT services
+track: analytics
+domains: [Data Engineering, Analytics and Reporting]
+summary: >-
+  Built the SQL and Python workflows that pulled five enterprise data sources into
+  validated datasets for recurring performance reporting, and investigated the KPI
+  deviations those reports surfaced.
+highlight: Integrated five enterprise data sources into validated reporting datasets.
+context:
+  text: >-
+    Recurring performance analysis depended on data held in five separate enterprise
+    sources. Reports were only useful if those inputs were validated and combined the
+    same way every cycle, and if unusual KPI movements could be explained to both
+    business and technical stakeholders.
+  needs:
+    - Which client or internal function the reporting served (anonymised if required)
+    - Team size and who the work reported to
+    - The objective the team was measured on
+responsibilities:
+  - Built SQL and Python workflows integrating five enterprise data sources, validating inputs and producing datasets for recurring performance analysis and reporting.
+  - Investigated KPI deviations and unusual trends through exploratory analysis and root-cause diagnostics, documenting findings for business and technical stakeholders.
+  - Created Excel reconciliation workbooks with PivotTables, lookups and exception logs to compare records, isolate discrepancies and support performance reviews.
+  - Translated stakeholder requirements into analytical tasks, maintaining JIRA records of dependencies, validation evidence and issue status across delivery teams.
+  - Partnered with developers to validate analytical workflows against business requirements and resolve data issues before business use.
+contribution:
+  text: >-
+    The integration workflows, reconciliation workbooks and KPI investigations listed
+    here were my own work. Validation against business requirements was done jointly
+    with developers.
+  needs:
+    - Any team-level outcome this work fed into, stated separately from my part
+problems:
+  points:
+    - Why a KPI moved away from its expected range, and whether the cause was the business or the data.
+    - Whether records agreed across systems, and which specific records did not.
+    - Whether an analytical workflow met the business requirement it was built for.
+  needs:
+    - One or two concrete examples of a deviation investigated and the decision it informed
+tools: [SQL, Python, Excel, PivotTables, JIRA]
+methods:
+  - Input validation before integration
+  - Exploratory analysis and root-cause diagnostics
+  - Record-level reconciliation with exception logs
+  - Requirements traceability in JIRA
+achievements:
+  - name: Enterprise data sources integrated
+    value: "5"
+    unit: sources
+    method: Count of distinct source systems feeding the reporting datasets
+    source: Résumé
+    status: reported
+    needs:
+      - Names or types of the five sources
+      - Refresh frequency and approximate data volume
+  - name: Reporting effort or turnaround time
+    status: draft
+    needs:
+      - Time to prepare the recurring report before and after the workflows
+      - Measurement period
+skills: [Data integration, Data validation, Root-cause analysis, Reconciliation, Requirements analysis, Stakeholder communication]
+lessons:
+  needs:
+    - Two or three lessons from this role, in your own words

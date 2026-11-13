@@ -1,0 +1,86 @@
+title: LLM-powered customer segmentation and persona builder
+order: 8
+kind: independent
+status: completed
+domains: [Machine Learning, Customer Analytics, Marketing Analytics]
+projectType: Customer analytics
+technologies: [Python, Embeddings, Segmentation, UMAP, HDBSCAN, Claude API, Gradio]
+preview: segments
+card:
+  problem: Clusters are easy to compute and hard to use, because marketers need to know who each segment is, not its centroid.
+  solution: RFM features and text embeddings clustered with KMeans and HDBSCAN, customer lifetime value per segment, and LLM-written personas in a Gradio dashboard.
+  result: Built. Cluster quality figures not yet published.
+  resultStatus: draft
+summary:
+  problem: >-
+    Segmentation output usually arrives as a table of cluster numbers. Marketing teams
+    need a description they can target and a sense of what each segment is worth.
+  solution: >-
+    The pipeline builds RFM features, adds MiniLM text embeddings, reduces dimensions
+    with UMAP, clusters with KMeans and HDBSCAN, models customer lifetime value, and
+    uses the Claude API to write a persona for each segment. A Gradio dashboard
+    presents the result and can be deployed on Hugging Face Spaces.
+  outcome: A working pipeline and dashboard. Cluster quality and stability figures have not been published yet.
+context:
+  text: Independent portfolio project. Intended user is a CRM or lifecycle marketer.
+contribution:
+  text: Sole author.
+data:
+  needs:
+    - Dataset name (public or synthetic), number of customers and transactions, date range
+    - Which text field the embeddings are computed from
+architecture:
+  caption: Pipeline from transactions to personas.
+  stages:
+    - label: Transactions
+      detail: Customer purchase history
+    - label: RFM features
+      detail: Recency, frequency, monetary
+    - label: Embeddings
+      detail: MiniLM
+    - label: UMAP
+      detail: Dimensionality reduction
+    - label: Clustering
+      detail: KMeans and HDBSCAN
+    - label: Lifetime value
+      detail: Per segment
+    - label: Personas
+      detail: Claude API, shown in Gradio
+implementation:
+  points:
+    - KMeans gives a fixed number of balanced segments; HDBSCAN finds dense groups and leaves outliers unassigned. Running both shows whether the segments are a property of the data or of the algorithm.
+    - Personas are generated from segment statistics, so each description can be checked against the numbers behind it.
+  needs:
+    - The lifetime value method used
+    - How the number of clusters was chosen
+details:
+  - title: Keeping generated personas honest
+    body: >-
+      The model is given the segment's summary statistics and asked to describe them.
+      A persona should not state anything that cannot be traced to a figure in the
+      segment profile. Document the prompt and any checks applied.
+validation:
+  needs:
+    - Silhouette score or similar for each clustering method
+    - Stability of segments across random seeds or resamples
+    - Whether segments differ on a held-out behaviour, such as later purchases
+results:
+  text: The pipeline and dashboard are built. Evaluation figures will be added with their method.
+metrics:
+  - name: Cluster separation and stability
+    status: draft
+    needs:
+      - Silhouette score and adjusted Rand index across runs
+limitations:
+  points:
+    - Personas are generated text and should be reviewed before use.
+    - No experiment has tested whether targeting by these segments improves outcomes.
+nextSteps:
+  - Publish validation figures and link the repository and Space.
+evidence:
+  - label: Code repository
+    type: Repository
+    note: Add the GitHub URL.
+  - label: Hugging Face Space
+    type: Demo
+    note: Add the link once deployed.

@@ -1,0 +1,54 @@
+employer: GEODIS
+role: Inventory Control Analyst
+account: Alo Yoga account
+start: "2026-07"
+end: null
+location: Oshawa, Ontario
+industry: Third-party logistics
+track: operations
+domains: [Operations]
+summary: >-
+  Reconcile physical stock against warehouse management system balances for an
+  ecommerce fulfilment account, investigate shortages and order exceptions, and keep
+  the exception logs used for root-cause follow-up.
+highlight: Reconcile physical stock against GWMS balances at SKU, quantity and location level.
+context:
+  text: >-
+    Ecommerce orders can only ship when the system balance matches what is physically
+    on the shelf. Discrepancies between GWMS and the floor cause shortages, incomplete
+    orders and delayed dispatch.
+  needs:
+    - Approximate SKU count or locations covered
+    - Inventory accuracy target for the account, if one can be shared
+responsibilities:
+  - Reconcile physical stock with GWMS balances, validating SKU, quantity and location records and coordinating corrections for inventory discrepancies.
+  - Investigate shortages and order exceptions across inventory control, picking, packing and dispatch teams.
+  - Maintain exception logs for incomplete orders and recurring stock variances, providing evidence for root-cause analysis and supervisor follow-up.
+  - Review picking and packing records for accuracy and communicate unresolved inventory issues across teams.
+contribution:
+  text: >-
+    Reconciliation, investigation and exception logging are my responsibilities.
+    Corrections are coordinated with picking, packing and dispatch teams, and follow-up
+    actions are owned by supervisors.
+problems:
+  points:
+    - Where the system balance and the physical count disagree, and why.
+    - Which stock variances recur, and what they have in common.
+    - Which orders cannot be completed and what is blocking them.
+  needs:
+    - An example of a recurring variance traced to its cause
+tools: [GWMS, Exception logs]
+methods:
+  - Stock-to-system reconciliation
+  - Exception logging
+  - Root-cause evidence gathering
+achievements:
+  - name: Inventory accuracy or variance rate
+    status: draft
+    needs:
+      - Accuracy or variance figure for a defined period, if it can be shared publicly
+      - Confirmation from the employer that account-level figures may be published
+skills: [Inventory reconciliation, Discrepancy investigation, Root-cause analysis, Cross-team communication]
+lessons:
+  needs:
+    - Two or three lessons from this role, in your own words

@@ -1,0 +1,57 @@
+employer: Whirldata
+role: Data Analyst
+start: "2019-02"
+end: "2020-03"
+location: Chennai, India
+industry: Data and analytics services
+industryNeedsConfirmation: true
+track: analytics
+domains: [Customer Analytics, Analytics and Reporting]
+summary: >-
+  Analysed customer and operational datasets with SQL and Python, applied segmentation
+  and churn analysis to recommend retention actions, and validated reporting changes
+  during pilot deployments.
+highlight: Applied segmentation and churn analysis to recommend retention actions.
+context:
+  text: >-
+    Stakeholders needed to know where performance was slipping, which reports had gaps,
+    and which customer groups were at risk of leaving because of service friction.
+  needs:
+    - The client industry or product the datasets described
+    - Number of customers or records analysed
+    - The retention or service goal for the period
+responsibilities:
+  - Queried and analyzed customer and operational datasets using SQL and Python to identify performance trends, reporting gaps and process issues.
+  - Applied customer segmentation and churn analysis to evaluate behavioural differences and recommend actions addressing service friction, retention and customer experience.
+  - Prepared recurring reports and reconciled source data, highlighting unusual trends and discrepancies.
+  - Documented requirements and workflows in JIRA and Confluence, collaborating with business, product and engineering teams.
+  - Validated reporting outputs during pilot deployments, incorporated stakeholder feedback and assessed early results.
+contribution:
+  text: >-
+    Querying, segmentation and churn analysis, recurring reports and pilot validation
+    were my responsibilities, working alongside business, product and engineering teams.
+  needs:
+    - Which retention actions were taken by the wider team, stated separately
+problems:
+  points:
+    - Which customer segments behaved differently, and which were more likely to churn.
+    - Where reports were missing information stakeholders needed.
+    - Whether a reporting enhancement worked as intended during its pilot.
+  needs:
+    - The segmentation variables used and the definition of churn
+tools: [SQL, Python, JIRA, Confluence]
+methods:
+  - Customer segmentation
+  - Churn analysis
+  - Source data reconciliation
+  - Pilot validation with stakeholder feedback
+achievements:
+  - name: Retention or churn outcome
+    status: draft
+    needs:
+      - Churn rate before and after, population and period
+      - Whether the change can be attributed to the recommended actions
+skills: [Customer analytics, Segmentation, Churn analysis, SQL, Requirements documentation, Pilot validation]
+lessons:
+  needs:
+    - Two or three lessons from this role, in your own words

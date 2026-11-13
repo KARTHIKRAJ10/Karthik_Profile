@@ -1,0 +1,76 @@
+---
+import StatusTag from './StatusTag.astro';
+import DraftField from './DraftField.astro';
+import { site } from '../data/site';
+import type { statusLabel } from '../lib/utils';
+
+interface Props {
+  metric: {
+    name: string;
+    value?: string;
+    unit?: string;
+    baseline?: string;
+    final?: string;
+    period?: string;
+    population?: string;
+    method?: string;
+    source?: string;
+    status: keyof typeof statusLabel;
+    needs: string[];
+  };
+}
+const { metric: m } = Astro.props;
+const hidden = m.status === 'draft' && !site.showDrafts;
+const provenance = [
+  ['Baseline', m.baseline],
+  ['Final', m.final],
+  ['Period', m.period],
+  ['Population', m.population],
+  ['Method', m.method],
+  ['Source', m.source],
+].filter(([, v]) => v) as [string, string][];
+---
+
+{
+  !hidden && (
+    <article class={`metric card ${m.status === 'draft' ? 'is-draft' : ''}`}>
+      <header>
+        <h4>{m.name}</h4>
+        <StatusTag status={m.status} />
+      </header>
+      {m.value ? (
+        <p class="value">
+          {m.value}
+          {m.unit && <span class="unit"> {m.unit}</span>}
+        </p>
+      ) : (
+        <p class="value empty">No value recorded</p>
+      )}
+      {provenance.length > 0 && (
+        <dl>
+          {provenance.map(([k, v]) => (
+            <div>
+              <dt>{k}</dt>
+              <dd>{v}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      <DraftField needs={m.needs} label="Needed to complete or verify" />
+    </article>
+  )
+}
+
+<style>
+  .metric { padding: var(--space-4) var(--space-5) var(--space-5); display: grid; gap: var(--space-3); align-content: start; }
+  .metric.is-draft { border-style: dashed; background: transparent; }
+  header { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); align-items: flex-start; justify-content: space-between; }
+  h4 { font-size: var(--step-0); font-weight: 600; max-width: 22ch; }
+  .value { font-size: var(--step-4); font-weight: 650; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .unit { font-size: var(--step-0); font-weight: 500; letter-spacing: 0; color: var(--ink-2); }
+  .value.empty { font-size: var(--step-0); font-weight: 500; letter-spacing: 0; color: var(--ink-3); line-height: 1.4; }
+  dl { margin: 0; display: grid; gap: 0.3rem; font-size: var(--step--1); border-top: 1px solid var(--line); padding-top: var(--space-3); }
+  dl div { display: grid; grid-template-columns: 5.5rem 1fr; gap: var(--space-2); }
+  dt { color: var(--ink-3); }
+  dd { margin: 0; color: var(--ink-2); }
+</style>

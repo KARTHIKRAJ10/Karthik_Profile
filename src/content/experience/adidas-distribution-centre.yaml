@@ -1,0 +1,44 @@
+employer: Adidas Distribution Centre
+role: Shipping Associate
+start: "2024-01"
+end: "2025-01"
+location: Brantford, Ontario
+industry: Sportswear distribution
+track: operations
+domains: [Operations]
+summary: >-
+  Used Manhattan WMS to check order status and stock, reconciled picked, packed and
+  shipped quantities against dispatch records, and kept the discrepancy logs used to
+  investigate shortages and delays.
+highlight: Reconciled picked, packed and shipped quantities against dispatch records.
+context:
+  text: >-
+    Outbound shipments must match the order: the right items, in the right quantities,
+    with documentation that lets a missing or incorrect item be traced.
+  needs:
+    - Typical shipment or order volume handled per shift, if it can be shared
+responsibilities:
+  - Used Manhattan WMS to review order status, product identifiers, quantities and stock availability, supporting accurate order fulfilment and outbound shipment readiness.
+  - Reconciled picked, packed and shipped quantities against dispatch records, investigated variances and coordinated corrections for missing or incorrect shipment items.
+  - Maintained shipment documentation and discrepancy logs, tracing records and escalating shortages, incomplete orders and dispatch delays.
+contribution:
+  text: >-
+    Reconciliation, variance investigation and log keeping were my responsibilities;
+    corrective actions were coordinated with the wider shipping team.
+problems:
+  points:
+    - Whether what was picked, packed and shipped agreed with the dispatch record.
+    - Where a missing or incorrect item entered the process.
+tools: [Manhattan WMS, Discrepancy logs]
+methods:
+  - Quantity reconciliation across pick, pack and ship
+  - Record tracing and escalation
+achievements:
+  - name: Shipment accuracy or variance rate
+    status: draft
+    needs:
+      - A figure for a defined period, if one exists and can be shared
+skills: [Shipment reconciliation, WMS record review, Discrepancy logging, Escalation]
+lessons:
+  needs:
+    - One or two lessons from this role, in your own words

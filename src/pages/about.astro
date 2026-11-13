@@ -1,0 +1,121 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BarChart from '../components/BarChart.astro';
+import DraftField from '../components/DraftField.astro';
+import { education, site } from '../data/site';
+import { href, statusHelp, statusLabel } from '../lib/utils';
+import StatusTag from '../components/StatusTag.astro';
+
+const projects = (await getCollection('projects')).filter((p) => p.data.kind !== 'concept');
+const counts = new Map<string, number>();
+for (const p of projects) for (const t of p.data.technologies) counts.set(t, (counts.get(t) ?? 0) + 1);
+const top = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 8);
+
+const techChart = {
+  title: 'Technologies across case studies',
+  description: 'How many professional and independent case studies on this site use each technology. Proposed concepts are excluded.',
+  xLabel: 'Case studies',
+  yLabel: 'Technology',
+  unit: 'case studies',
+  status: 'verified' as const,
+  source: 'Counted from the project content files of this site at build time.',
+  data: top.map(([label, value]) => ({ label, value })),
+};
+const statuses = Object.keys(statusLabel) as (keyof typeof statusLabel)[];
+---
+
+<BaseLayout title="About" description={`About ${site.name}: background, working method and how results on this site are evidenced.`}>
+  <div class="wrap page-head">
+    <h1>About</h1>
+    <p class="lede">{site.valueProposition}</p>
+  </div>
+
+  <div class="wrap cols">
+    <div class="prose">
+      <p>
+        I started as a data analyst at Whirldata in 2019, querying customer and operational data and running segmentation
+        and churn analysis. At The Prink I spent two years on ecommerce analytics, joining GA4, Shopify, CRM and
+        transaction data into the dashboards used for KPI reviews and evaluating A/B tests. At Neurealm I built the SQL
+        and Python workflows that integrated five enterprise sources for performance reporting.
+      </p>
+      <p>
+        I moved to Ontario and completed a graduate certificate in IT business analysis at Conestoga College. Since then I
+        have worked in distribution and inventory control, most recently reconciling stock against warehouse system
+        balances at GEODIS.
+      </p>
+      <p>
+        One habit runs through all of it: before a number is used, I check it against where it came from. That holds
+        whether the number is a dashboard measure, a KPI that has moved, or a bin quantity.
+      </p>
+      <p>
+        Alongside this I build independent machine learning and LLM projects, which are labelled as independent wherever
+        they appear on this site.
+      </p>
+      <DraftField
+        label="Draft. Personal statement"
+        needs={[
+          'The roles you are targeting now and what you want to work on next',
+          'Anything about how you prefer to work that an employer should know',
+        ]}
+      />
+      <p>
+        <a href={href('/experience/')}>See each role</a> or <a href={href('/contact/')}>get in touch</a>.
+      </p>
+    </div>
+
+    <aside class="side">
+      <h2>Education</h2>
+      <ul class="edu">
+        {
+          education.map((ed) => (
+            <li>
+              <strong>{ed.credential}</strong>
+              <span>
+                {ed.school}, {ed.place}
+              </span>
+              <span class="muted small">{ed.dates}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </aside>
+  </div>
+
+  <section class="band wrap" aria-labelledby="evidence-title">
+    <div class="band-head">
+      <h2 id="evidence-title">How results are labelled on this site</h2>
+      <p>Each figure carries one of these statuses, shown next to the number.</p>
+    </div>
+    <dl class="legend">
+      {
+        statuses.map((s) => (
+          <div>
+            <dt>
+              <StatusTag status={s} />
+            </dt>
+            <dd>{statusHelp[s]}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <div class="wrap chart-wrap">
+    <BarChart chart={techChart} />
+  </div>
+</BaseLayout>
+
+<style>
+  .cols { display: grid; gap: var(--space-7); }
+  .side h2 { font-size: var(--step-2); margin-bottom: var(--space-4); }
+  .edu { list-style: none; display: grid; gap: var(--space-4); }
+  .edu li { display: grid; gap: 0.1rem; }
+  .band { margin-top: var(--space-8); border-top: 1px solid var(--line); }
+  .legend { margin: 0; display: grid; gap: var(--space-3); max-width: 48rem; }
+  .legend div { display: grid; grid-template-columns: 12rem 1fr; gap: var(--space-4); align-items: baseline; }
+  .legend dd { margin: 0; color: var(--ink-2); }
+  .chart-wrap { max-width: 52rem; }
+  @media (min-width: 60rem) { .cols { grid-template-columns: 1fr 18rem; } }
+  @media (max-width: 36rem) { .legend div { grid-template-columns: 1fr; gap: var(--space-1); } }
+</style>

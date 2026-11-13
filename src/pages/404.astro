@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { href } from '../lib/utils';
+---
+
+<BaseLayout title="Page not found" description="This page does not exist." noindex>
+  <div class="wrap page-head">
+    <p class="kicker">Error 404</p>
+    <h1>This page does not exist</h1>
+    <p class="lede">The address may be mistyped, or the page may have moved. These will get you back on track.</p>
+    <div class="btn-row" style="margin-top: var(--space-5)">
+      <a class="btn btn-primary" href={href('/projects/')}>Browse projects</a>
+      <a class="btn" href={href('/experience/')}>View experience</a>
+      <a class="btn" href={href('/')}>Go to the homepage</a>
+    </div>
+  </div>
+</BaseLayout>

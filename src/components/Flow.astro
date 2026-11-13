@@ -1,0 +1,83 @@
+---
+import DraftField from './DraftField.astro';
+
+interface Props {
+  stages: { label: string; detail?: string }[];
+  caption?: string;
+  needs?: string[];
+}
+const { stages, caption, needs = [] } = Astro.props;
+---
+
+<figure class="flow">
+  <ol>
+    {
+      stages.map((s) => (
+        <li>
+          <span class="label">{s.label}</span>
+          {s.detail && <span class="detail">{s.detail}</span>}
+        </li>
+      ))
+    }
+  </ol>
+  {caption && <figcaption>{caption}</figcaption>}
+  <DraftField needs={needs} />
+</figure>
+
+<style>
+  .flow { margin: 0; display: grid; gap: var(--space-4); }
+  ol { list-style: none; counter-reset: stage; display: grid; gap: var(--space-5) var(--space-5); grid-template-columns: 1fr; }
+  li {
+    counter-increment: stage;
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: var(--space-3) var(--space-4) var(--space-3) 3rem;
+    display: grid;
+    gap: 0.15rem;
+    min-height: 3.5rem;
+    align-content: center;
+  }
+  li::before {
+    content: counter(stage);
+    position: absolute;
+    left: var(--space-3);
+    top: 50%;
+    translate: 0 -50%;
+    width: 1.6rem;
+    height: 1.6rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+  /* connector to the next stage */
+  li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 1.55rem;
+    top: 100%;
+    height: var(--space-5);
+    border-left: 2px solid var(--line-strong);
+  }
+  .label { font-weight: 600; line-height: 1.3; }
+  .detail { font-size: var(--step--1); color: var(--ink-2); line-height: 1.35; }
+  figcaption { font-size: var(--step--1); color: var(--ink-2); max-width: var(--measure); }
+
+  @media (min-width: 52rem) {
+    ol { grid-template-columns: repeat(3, 1fr); }
+    li:not(:last-child)::after {
+      left: 100%;
+      top: 50%;
+      height: 0;
+      width: var(--space-5);
+      border-left: 0;
+      border-top: 2px solid var(--line-strong);
+    }
+    li:nth-child(3n):not(:last-child)::after { display: none; }
+  }
+</style>

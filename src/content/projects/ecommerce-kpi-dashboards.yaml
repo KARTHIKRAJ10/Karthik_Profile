@@ -1,0 +1,126 @@
+title: Ecommerce KPI dashboards reconciled to source
+order: 2
+kind: professional
+status: completed
+employer: the-prink
+period: Sep 2020 to Oct 2022
+domains: [Marketing Analytics, Analytics and Reporting]
+projectType: Dashboard and reporting
+technologies: [GA4, Shopify, Power BI, Looker Studio, Excel]
+preview: dashboard
+card:
+  problem: Campaign activity, customer behaviour and sales lived in four systems, so KPI reviews could not connect cause to result.
+  solution: Power BI and Looker Studio dashboards over GA4, Shopify, CRM and transaction data, with every measure reconciled against source totals.
+  result: Four data sources joined in dashboards used for recurring KPI reviews.
+  resultStatus: reported
+summary:
+  problem: >-
+    The business could see campaigns in one tool, sessions in another and orders in a
+    third. Recurring KPI reviews needed one view linking campaign activity to customer
+    behaviour and sales, with numbers that matched the source systems.
+  solution: >-
+    I built Power BI and Looker Studio dashboards over GA4, Shopify, CRM and
+    transaction data, prepared and checked the underlying datasets, and reconciled
+    dashboard measures against source totals.
+  outcome: >-
+    Dashboards used in recurring KPI reviews and commercial decisions, with
+    discrepancies investigated and corrected. No quantified business outcome has been
+    recorded yet.
+context:
+  text: >-
+    Stakeholders met on a recurring cycle to review commercial performance and decide
+    where to focus campaigns and website work.
+  needs:
+    - Who the stakeholders were (founder, marketing lead, operations)
+    - Review cadence and the decisions typically taken
+contribution:
+  text: >-
+    I prepared the data, built the dashboards and reconciled them. Stakeholders owned
+    the commercial decisions.
+  needs:
+    - Whether anyone else contributed to the data model or dashboards
+data:
+  points:
+    - "GA4: website behaviour."
+    - "Shopify: orders and products."
+    - "CRM: customer records."
+    - Transaction data.
+    - Excel and CSV extracts checked for product attributes, dates, channel labels and missing values.
+  needs:
+    - Time period covered and approximate monthly orders or sessions
+    - Known gaps, such as consent-related tracking loss in GA4 or channel label changes
+architecture:
+  caption: Flow reconstructed from the résumé description.
+  stages:
+    - label: GA4, Shopify, CRM, transactions
+      detail: Four sources
+    - label: Data preparation
+      detail: Attribute, date, channel and missing-value checks
+    - label: KPI model
+      detail: Campaign, behaviour and sales measures
+    - label: Dashboards
+      detail: Power BI and Looker Studio
+    - label: Reconciliation
+      detail: Measures compared with source totals
+    - label: KPI review
+      detail: Recurring stakeholder meeting
+  needs:
+    - How data moved from each source into the dashboards (connectors, exports, refresh schedule)
+implementation:
+  points:
+    - Dashboards connect campaign activity to customer behaviour and to sales results, so a reviewer can follow one campaign through to orders.
+    - Product attributes, dates and channel labels were standardised before analysis so that the same campaign carried the same label in every source.
+  needs:
+    - The KPIs shown and how each was defined (for example conversion rate denominator)
+    - Which views were built in Power BI and which in Looker Studio, and why
+details:
+  - title: Why reconciliation was part of the build
+    body: >-
+      Web analytics and order systems count differently: sessions against orders,
+      different time zones, refunds, tracking gaps. Each dashboard measure was compared
+      with the corresponding source total, and differences were investigated before the
+      figure was used in a review.
+  - title: Attribution limitations
+    body: >-
+      Channel-level results from GA4 reflect its attribution settings and whatever
+      tracking consent allows. They describe association between campaigns and sales,
+      not incremental effect. State the attribution model used once confirmed.
+validation:
+  points:
+    - Dashboard measures reconciled against source totals.
+    - Discrepancies investigated to their cause before reporting.
+  needs:
+    - Tolerance used when comparing dashboard and source figures
+results:
+  text: >-
+    The dashboards supported recurring KPI reviews and commercial decisions. Outcome
+    figures have not been recorded.
+metrics:
+  - name: Data sources combined
+    value: "4"
+    unit: sources
+    method: GA4, Shopify, CRM and transaction data
+    source: Résumé
+    status: reported
+  - name: Dashboard-to-source discrepancy
+    status: draft
+    needs:
+      - Size of the gap before and after reconciliation, for a named measure and period
+  - name: Commercial result of a decision informed by the dashboards
+    status: draft
+    needs:
+      - Metric, baseline, final value, period and how the dashboard informed the decision
+limitations:
+  points:
+    - Dashboards and data belong to the employer and cannot be shown.
+    - No screenshot or anonymised mock-up is attached yet.
+nextSteps:
+  - Recreate one dashboard view on synthetic data, labelled as a demonstration.
+  - Document KPI definitions as a short data dictionary.
+evidence:
+  - label: Résumé entry for The Prink
+    type: Résumé
+    note: Source for every statement on this page.
+  - label: Dashboard
+    type: Dashboard
+    note: Not available. Employer-owned work.

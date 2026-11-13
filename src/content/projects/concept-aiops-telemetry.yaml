@@ -1,0 +1,50 @@
+title: AIOps telemetry and incident analysis
+order: 22
+kind: concept
+status: proposed
+domains: [Machine Learning, Operations]
+projectType: Operations analytics
+technologies: [Python, SQL, Anomaly detection, Time-series forecasting]
+preview: forecast
+card:
+  problem: Operations teams drown in alerts, and most of them are not incidents.
+  solution: "Proposed: detect anomalies in service telemetry, group related alerts and measure detection against labelled incidents."
+  result: Proposed concept. Not started.
+  resultStatus: target
+summary:
+  problem: Alert volume hides the few signals that precede a real incident.
+  solution: >-
+    Proposed: apply time-series anomaly detection to public or synthetic service
+    metrics, correlate alerts into incidents, and report precision, recall and
+    detection lead time against labelled events.
+  outcome: Not started. This page describes a plan.
+context:
+  text: Proposed independent project applying the résumé's time-series and anomaly detection skills to IT operations data.
+contribution:
+  text: Would be sole author.
+data:
+  points:
+    - "Candidate: a public labelled anomaly benchmark such as the Numenta Anomaly Benchmark, or synthetic telemetry labelled as synthetic."
+architecture:
+  caption: Planned pipeline.
+  stages:
+    - label: Telemetry
+      detail: Metrics and alerts
+    - label: Seasonal baseline
+    - label: Anomaly scoring
+    - label: Alert grouping
+    - label: Evaluation
+      detail: Against labelled incidents
+implementation:
+  points:
+    - Start with a seasonal baseline and residual threshold before trying a learned model.
+validation:
+  points:
+    - Precision, recall and lead time on labelled incidents, with a static-threshold baseline.
+results:
+  text: None. Proposed work.
+limitations:
+  points:
+    - Benchmark data is simpler than production telemetry.
+nextSteps:
+  - Choose the dataset and define the evaluation protocol.

@@ -1,0 +1,39 @@
+---
+import { site } from '../data/site';
+
+interface Props {
+  needs: string[];
+  label?: string;
+}
+const { needs, label = 'Draft. Information needed to complete this section' } = Astro.props;
+const show = site.showDrafts && needs.length > 0;
+---
+
+{
+  show && (
+    <aside class="draft" data-draft>
+      <p class="draft-label">{label}</p>
+      <ul>
+        {needs.map((n) => (
+          <li>{n}</li>
+        ))}
+      </ul>
+    </aside>
+  )
+}
+
+<style>
+  .draft {
+    border: 1.5px dashed var(--line-strong);
+    border-radius: var(--radius);
+    padding: var(--space-3) var(--space-4);
+    background: repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in srgb, var(--surface-2) 60%, transparent) 10px 11px);
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    color: var(--ink-2);
+    max-width: var(--measure);
+  }
+  .draft-label { font-weight: 650; color: var(--ink); }
+  .draft ul { margin-top: var(--space-2); padding-left: 1.1rem; }
+  .draft li + li { margin-top: 0.2rem; }
+</style>

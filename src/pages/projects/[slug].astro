@@ -1,0 +1,382 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionBlock from '../../components/SectionBlock.astro';
+import MetricCard from '../../components/MetricCard.astro';
+import BarChart from '../../components/BarChart.astro';
+import Flow from '../../components/Flow.astro';
+import ProjectPreview from '../../components/ProjectPreview.astro';
+import DraftField from '../../components/DraftField.astro';
+import { site } from '../../data/site';
+import { byOrder, completionLabel, href, kindLabel, techHref } from '../../lib/utils';
+
+export async function getStaticPaths() {
+  const entries = (await getCollection('projects')).sort(byOrder);
+  return entries.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, prev: entries[i - 1] ?? null, next: entries[i + 1] ?? null },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+  prev: CollectionEntry<'projects'> | null;
+  next: CollectionEntry<'projects'> | null;
+}
+const { entry, prev, next } = Astro.props;
+const p = entry.data;
+const employer = p.employer ? (await getCollection('experience')).find((e) => e.id === p.employer) : undefined;
+const metrics = p.metrics.filter((m) => site.showDrafts || m.status !== 'draft');
+const hasResultsVisuals = metrics.length > 0 || p.charts.length > 0;
+
+const toc = [
+  ['summary', 'Executive summary'],
+  ['context', 'Business context'],
+  ['contribution', 'My contribution'],
+  ['data', 'Data'],
+  ['architecture', 'Architecture'],
+  ['implementation', 'Implementation'],
+  ['validation', 'Validation'],
+  ['results', 'Results'],
+  ['limitations', 'Limitations and next steps'],
+  ['evidence', 'Evidence'],
+] as const;
+
+const notice =
+  p.kind === 'concept'
+    ? 'Proposed concept. This work has not been started. Nothing on this page is a completed result.'
+    : p.kind === 'independent'
+      ? 'Independent portfolio project. Not produced for an employer or client.'
+      : null;
+---
+
+<BaseLayout title={p.title} description={p.card.problem} ogType="article">
+  <article>
+    <header class="wrap page-head head">
+      <div>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href={href('/')}>Home</a></li>
+            <li><a href={href('/projects/')}>Projects</a></li>
+            <li aria-current="page">{p.title}</li>
+          </ol>
+        </nav>
+        <h1>{p.title}</h1>
+        <dl class="facts">
+          <div>
+            <dt>Source of work</dt>
+            <dd>{kindLabel[p.kind]}</dd>
+          </div>
+          {
+            employer && (
+              <div>
+                <dt>Employer</dt>
+                <dd>
+                  <a href={href(`/experience/${employer.id}/`)}>{employer.data.employer}</a>
+                </dd>
+              </div>
+            )
+          }
+          <div>
+            <dt>Status</dt>
+            <dd>{completionLabel[p.status]}</dd>
+          </div>
+          {
+            p.period && (
+              <div>
+                <dt>Period</dt>
+                <dd>{p.period}</dd>
+              </div>
+            )
+          }
+          <div>
+            <dt>Type</dt>
+            <dd>{p.projectType}</dd>
+          </div>
+        </dl>
+        <ul class="tag-list techs" aria-label="Technologies">
+          {p.technologies.map((t) => <li><a class="tag" href={techHref(t)}>{t}</a></li>)}
+        </ul>
+      </div>
+      <figure class="preview-fig card">
+        <ProjectPreview type={p.preview} />
+        <figcaption class="small muted">Schematic of the approach. Not a plot of project data.</figcaption>
+      </figure>
+    </header>
+
+    {
+      (notice || p.usesSyntheticData) && (
+        <div class="wrap">
+          <div class="notice">
+            {notice && <p>{notice}</p>}
+            {p.usesSyntheticData && (
+              <p>
+                <strong>Synthetic data.</strong> Every value this project produces comes from generated data and is not a
+                professional achievement metric.
+              </p>
+            )}
+          </div>
+        </div>
+      )
+    }
+
+    <div class="wrap layout">
+      <aside class="toc-col">
+        <details class="toc" open>
+          <summary>On this page</summary>
+          <nav aria-label="Case study sections">
+            <ol>
+              {toc.map(([id, label]) => <li><a href={`#${id}`} data-toc-link>{label}</a></li>)}
+            </ol>
+          </nav>
+        </details>
+      </aside>
+
+      <div class="content stack-lg">
+        <section id="summary" aria-labelledby="summary-h" data-toc-section>
+          <h2 id="summary-h">Executive summary</h2>
+          <div class="summary-grid">
+            <div>
+              <h3>Problem</h3>
+              <p>{p.summary.problem}</p>
+            </div>
+            <div>
+              <h3>Solution</h3>
+              <p>{p.summary.solution}</p>
+            </div>
+            <div>
+              <h3>Outcome</h3>
+              <p>{p.summary.outcome}</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="context" aria-labelledby="context-h" data-toc-section>
+          <h2 id="context-h">Business context</h2>
+          <SectionBlock block={p.context} />
+        </section>
+
+        <section id="contribution" aria-labelledby="contribution-h" data-toc-section>
+          <h2 id="contribution-h">My contribution</h2>
+          <SectionBlock block={p.contribution} />
+        </section>
+
+        <section id="data" aria-labelledby="data-h" data-toc-section>
+          <h2 id="data-h">Data</h2>
+          <SectionBlock block={p.data} />
+        </section>
+
+        <section id="architecture" aria-labelledby="architecture-h" data-toc-section>
+          <h2 id="architecture-h">Architecture</h2>
+          <Flow stages={p.architecture.stages} caption={p.architecture.caption} needs={p.architecture.needs} />
+        </section>
+
+        <section id="implementation" aria-labelledby="implementation-h" data-toc-section>
+          <h2 id="implementation-h">Implementation</h2>
+          <SectionBlock block={p.implementation} />
+          {
+            p.details.length > 0 && (
+              <div class="accordion">
+                {p.details.map((d) => (
+                  <details>
+                    <summary>{d.title}</summary>
+                    <p>{d.body}</p>
+                  </details>
+                ))}
+              </div>
+            )
+          }
+        </section>
+
+        <section id="validation" aria-labelledby="validation-h" data-toc-section>
+          <h2 id="validation-h">Validation</h2>
+          <SectionBlock block={p.validation} />
+        </section>
+
+        <section id="results" aria-labelledby="results-h" data-toc-section>
+          <h2 id="results-h">Results</h2>
+          <SectionBlock block={p.results} />
+          {
+            hasResultsVisuals && (
+              <>
+                {metrics.length > 0 && (
+                  <div class="grid grid-2">
+                    {metrics.map((m) => (
+                      <MetricCard metric={m} />
+                    ))}
+                  </div>
+                )}
+                {p.charts.map((c) => (
+                  <BarChart chart={c} />
+                ))}
+              </>
+            )
+          }
+          {
+            p.charts.length === 0 && p.kind !== 'concept' && (
+              <DraftField
+                label="Draft. No chart is shown"
+                needs={[
+                  'A chart appears here once measured values are added to the charts field of this project content file.',
+                  'A single before-and-after pair is shown as two values, never drawn as a trend line.',
+                ]}
+              />
+            )
+          }
+        </section>
+
+        <section id="limitations" aria-labelledby="limitations-h" data-toc-section>
+          <h2 id="limitations-h">Limitations and next steps</h2>
+          <SectionBlock block={p.limitations} />
+          {
+            p.nextSteps.length > 0 && (
+              <div class="prose">
+                <h3>Next steps</h3>
+                <ul>
+                  {p.nextSteps.map((n) => (
+                    <li>{n}</li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+        </section>
+
+        <section id="evidence" aria-labelledby="evidence-h" data-toc-section>
+          <h2 id="evidence-h">Evidence</h2>
+          {
+            p.evidence.length > 0 ? (
+              <ul class="evidence">
+                {p.evidence.map((ev) => (
+                  <li class={ev.url ? '' : 'pending'}>
+                    <span class="ev-type">{ev.type}</span>
+                    <span class="ev-label">
+                      {ev.url ? (
+                        <a href={ev.url} rel="noopener">
+                          {ev.label}
+                        </a>
+                      ) : (
+                        ev.label
+                      )}
+                    </span>
+                    {ev.note && <span class="ev-note">{ev.note}</span>}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="prose">No artefacts yet. This is a proposal.</p>
+            )
+          }
+        </section>
+
+        <nav class="pager" aria-label="More projects">
+          {
+            prev ? (
+              <a href={href(`/projects/${prev.id}/`)}>
+                <span class="small muted">Previous project</span>
+                <span class="t">{prev.data.title}</span>
+              </a>
+            ) : (
+              <span />
+            )
+          }
+          {
+            next && (
+              <a class="next" href={href(`/projects/${next.id}/`)}>
+                <span class="small muted">Next project</span>
+                <span class="t">{next.data.title}</span>
+              </a>
+            )
+          }
+        </nav>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .head { display: grid; gap: var(--space-6); align-items: end; }
+  .head h1 { max-width: 22ch; }
+  .facts { margin: var(--space-5) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); }
+  .facts dt { font-size: 0.8125rem; color: var(--ink-3); }
+  .facts dd { margin: 0; font-weight: 600; }
+  .techs { margin-top: var(--space-4); }
+  .preview-fig { margin: 0; overflow: hidden; }
+  .preview-fig figcaption { padding: var(--space-2) var(--space-3); border-top: 1px solid var(--line); }
+  .notice { border-left: 4px solid var(--sim); background: var(--surface); padding: var(--space-3) var(--space-4); border-radius: 0 var(--radius) var(--radius) 0; display: grid; gap: var(--space-2); margin-bottom: var(--space-5); max-width: 52rem; }
+
+  .layout { display: grid; gap: var(--space-5); }
+  .toc { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: var(--space-3) var(--space-4); }
+  .toc summary { font-weight: 650; }
+  .toc ol { list-style: none; margin-top: var(--space-3); display: grid; gap: 0.1rem; }
+  .toc a { display: block; padding: 0.35rem 0.6rem; border-left: 2px solid var(--line); color: var(--ink-2); text-decoration: none; font-size: var(--step--1); }
+  .toc a:hover { color: var(--ink); }
+  .toc a[aria-current='true'] { border-left-color: var(--accent); color: var(--ink); font-weight: 600; }
+
+  .content { min-width: 0; }
+  section { display: grid; gap: var(--space-4); border-top: 1px solid var(--line); padding-top: var(--space-6); }
+  .content > section:first-child { border-top: 0; padding-top: 0; }
+  .summary-grid { display: grid; gap: var(--space-5); }
+  .summary-grid h3 { font-size: var(--step-0); color: var(--accent); margin-bottom: var(--space-2); }
+  .summary-grid p { font-family: var(--font-prose); font-size: 1.0625rem; line-height: 1.6; }
+
+  .accordion { display: grid; gap: var(--space-2); max-width: var(--measure); }
+  .accordion details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+  .accordion summary { padding: var(--space-3) var(--space-4); font-weight: 600; }
+  .accordion details[open] summary { border-bottom: 1px solid var(--line); }
+  .accordion p { padding: var(--space-4); font-family: var(--font-prose); font-size: 1.0625rem; line-height: 1.6; }
+
+  .evidence { list-style: none; display: grid; max-width: 48rem; border-top: 1px solid var(--line); }
+  .evidence li { display: grid; grid-template-columns: 7rem 1fr; gap: 0.1rem var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--line); }
+  .ev-type { font-size: var(--step--1); color: var(--ink-3); }
+  .ev-label { font-weight: 600; }
+  .ev-note { grid-column: 2; font-size: var(--step--1); color: var(--ink-2); }
+  .pending .ev-label { color: var(--ink-2); }
+
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); border-top: 1px solid var(--line); padding-top: var(--space-6); }
+  .pager a { display: grid; gap: 0.2rem; text-decoration: none; padding: var(--space-4); border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); align-content: start; }
+  .pager a:hover { border-color: var(--accent); }
+  .pager .t { font-weight: 650; color: var(--ink); line-height: 1.3; }
+  .pager .next { text-align: right; }
+
+  @media (min-width: 52rem) {
+    .head { grid-template-columns: 1fr 20rem; }
+    .summary-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 64rem) {
+    .layout { grid-template-columns: 14rem 1fr; gap: var(--space-7); }
+    .toc-col { position: sticky; top: 5.5rem; align-self: start; }
+    .toc { border: 0; background: none; padding: 0; }
+    .toc summary { list-style: none; cursor: default; pointer-events: none; }
+    .toc summary::-webkit-details-marker { display: none; }
+  }
+</style>
+
+<script>
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+  const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-toc-section]'));
+  const toc = document.querySelector<HTMLDetailsElement>('.toc');
+  const wide = window.matchMedia('(min-width: 64rem)');
+
+  // Collapsed by default on small screens, always open in the sidebar.
+  const syncToc = () => toc && (toc.open = wide.matches);
+  syncToc();
+  wide.addEventListener('change', syncToc);
+  links.forEach((a) => a.addEventListener('click', () => !wide.matches && toc && (toc.open = false)));
+
+  if ('IntersectionObserver' in window && sections.length) {
+    const setCurrent = (id: string) =>
+      links.forEach((a) => {
+        if (a.hash === `#${id}`) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) setCurrent(visible[0].target.id);
+      },
+      { rootMargin: '-15% 0px -70% 0px' },
+    );
+    sections.forEach((s) => observer.observe(s));
+  }
+</script>

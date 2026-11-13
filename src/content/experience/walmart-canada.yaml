@@ -1,0 +1,32 @@
+employer: Walmart Canada
+role: Customer Service Representative
+start: "2025-05"
+end: "2026-06"
+location: Scarborough, Ontario
+industry: Retail
+track: operations
+domains: [Operations]
+summary: >-
+  Investigated customer concerns, resolved pricing and checkout discrepancies with
+  department teams, and escalated complex cases with clear next steps.
+context:
+  text: >-
+    Front-line service in a large-format retail store, where pricing, availability and
+    checkout issues have to be resolved accurately and quickly.
+responsibilities:
+  - Investigated customer concerns, clarified resolution needs and escalated complex issues to supervisors while communicating next steps and available service options.
+  - Collaborated with department teams to verify product availability and resolve pricing or checkout discrepancies.
+contribution:
+  text: Individual front-line role; escalations were resolved by supervisors.
+problems:
+  points:
+    - What the customer needed and which option would resolve it.
+    - Whether a price or checkout discrepancy was a system, signage or scanning issue.
+tools: []
+methods:
+  - Issue investigation and escalation
+  - Discrepancy verification with department teams
+skills: [Customer communication, Issue resolution, Discrepancy verification]
+lessons:
+  needs:
+    - One or two lessons from this role, in your own words

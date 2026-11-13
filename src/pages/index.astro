@@ -1,0 +1,176 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Timeline from '../components/Timeline.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import StatusTag from '../components/StatusTag.astro';
+import { capabilities, site } from '../data/site';
+import { href, monthsBetween, techHref } from '../lib/utils';
+import { resumeUrl } from '../lib/resume';
+
+const experience = await getCollection('experience');
+const projects = await getCollection('projects');
+const employerName = (id?: string) => experience.find((e) => e.id === id)?.data.employer;
+const featured = site.featuredProjects
+  .map((id) => projects.find((p) => p.id === id))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+const resume = resumeUrl();
+const projectTechs = new Set(projects.flatMap((p) => p.data.technologies));
+
+// Supported facts only: verified or stated on the résumé. Draft, simulated and target values never appear here.
+const analyticsRoles = experience.filter((e) => e.data.track === 'analytics');
+const analyticsMonths = analyticsRoles.reduce((n, e) => n + monthsBetween(e.data.start, e.data.end), 0);
+const supported = experience.flatMap((e) =>
+  e.data.achievements
+    .filter((a) => a.status === 'verified' || a.status === 'reported')
+    .map((a) => ({ ...a, employer: e.data.employer, id: e.id })),
+);
+---
+
+<BaseLayout>
+  <section class="hero wrap">
+    <p class="who">
+      <span class="name">{site.name}</span>
+      <span class="headline">{site.headline}, {site.location}</span>
+    </p>
+    <h1>{site.valueProposition}</h1>
+    <p class="lede">{site.intro}</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href={href('/projects/')}>Explore my work</a>
+      <a class="btn" href={href('/experience/')}>View experience</a>
+      {
+        resume ? (
+          <a class="btn btn-quiet" href={resume} download>
+            Download résumé
+          </a>
+        ) : (
+          <a class="btn btn-quiet" href={href('/resume/')}>
+            Read résumé
+          </a>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="wrap timeline-band" aria-labelledby="timeline-title">
+    <div class="band-head">
+      <h2 id="timeline-title">Experience timeline</h2>
+      <p>Select a role to see what I worked on there and the case studies that came out of it.</p>
+    </div>
+    <Timeline />
+  </section>
+
+  <section class="band" aria-labelledby="featured-title">
+    <div class="wrap">
+      <div class="band-head">
+        <h2 id="featured-title">Featured work</h2>
+        <a href={href('/projects/')}>All {projects.length} projects</a>
+      </div>
+      <div class="grid grid-2">
+        {featured.map((p) => <ProjectCard project={p} employerName={employerName(p.data.employer)} compact />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="record-title">
+    <div class="wrap">
+      <div class="band-head">
+        <h2 id="record-title">What the record supports</h2>
+        <p>
+          Only facts with a recorded source appear here. Performance results are added to each case study once their
+          baseline, period and evidence are documented.
+        </p>
+      </div>
+      <ul class="facts">
+        <li class="card">
+          <p class="fact-value">{analyticsMonths}<span> months</span></p>
+          <p class="fact-name">in {analyticsRoles.length} data analyst and engineering roles</p>
+          <p class="fact-src small muted">Calculated from résumé dates</p>
+          <StatusTag status="reported" />
+        </li>
+        {
+          supported.map((a) => (
+            <li class="card">
+              <p class="fact-value">
+                {a.value}
+                <span> {a.unit}</span>
+              </p>
+              <p class="fact-name">
+                {a.name.toLowerCase()} at <a href={href(`/experience/${a.id}/`)}>{a.employer}</a>
+              </p>
+              <p class="fact-src small muted">{a.method}</p>
+              <StatusTag status={a.status} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="skills-title">
+    <div class="wrap">
+      <div class="band-head">
+        <h2 id="skills-title">Technical capabilities</h2>
+        <p>Underlined skills open the projects that use them.</p>
+      </div>
+      <div class="caps">
+        {
+          capabilities.map((group) => (
+            <div class="cap">
+              <h3>{group.domain}</h3>
+              <p class="muted small">{group.note}</p>
+              <ul class="tag-list">
+                {group.skills.map((s) =>
+                  s.tech && projectTechs.has(s.tech) ? (
+                    <li>
+                      <a class="tag linked" href={techHref(s.tech)}>
+                        {s.label}
+                      </a>
+                    </li>
+                  ) : (
+                    <li class="tag">{s.label}</li>
+                  ),
+                )}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="contact-title">
+    <div class="wrap contact">
+      <div>
+        <h2 id="contact-title">Get in touch</h2>
+        <p class="lede">{site.availability}</p>
+      </div>
+      <div class="btn-row">
+        {site.email && <a class="btn btn-primary" href={`mailto:${site.email}`}>Email me</a>}
+        {site.linkedin && <a class="btn" href={site.linkedin} rel="noopener">LinkedIn</a>}
+        {site.github && <a class="btn" href={site.github} rel="noopener">GitHub</a>}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { padding-block: var(--space-8) var(--space-7); display: grid; gap: var(--space-5); }
+  .who { display: flex; flex-wrap: wrap; gap: 0.2rem var(--space-4); align-items: baseline; }
+  .name { font-weight: 700; font-size: var(--step-1); }
+  .headline { color: var(--ink-2); }
+  h1 { font-size: var(--step-5); letter-spacing: -0.035em; line-height: 1.02; max-width: 19ch; }
+  .timeline-band { padding-bottom: var(--space-8); }
+  .facts { list-style: none; display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+  .facts li { padding: var(--space-5); display: grid; gap: var(--space-2); align-content: start; justify-items: start; }
+  .fact-value { font-size: var(--step-5); font-weight: 650; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .fact-value span { font-size: var(--step-0); font-weight: 500; letter-spacing: 0; color: var(--ink-2); }
+  .fact-name { font-weight: 600; }
+  .fact-src { margin-bottom: var(--space-2); }
+  .caps { display: grid; gap: var(--space-6) var(--space-7); grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+  .cap { display: grid; gap: var(--space-2); align-content: start; }
+  .cap .tag-list { margin-top: var(--space-2); }
+  .tag.linked { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 0.2em; background: var(--surface); }
+  .contact { display: grid; gap: var(--space-5); }
+  .contact .lede { margin-top: var(--space-3); }
+</style>

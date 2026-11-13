@@ -1,0 +1,54 @@
+title: Marketing incrementality and experiment measurement
+order: 20
+kind: concept
+status: proposed
+domains: [Marketing Analytics]
+projectType: Experimentation
+technologies: [Python, SQL, A/B testing]
+preview: experiment
+card:
+  problem: Attribution reports say which channel touched a sale, not whether the campaign caused it.
+  solution: "Proposed: measure incremental lift with a holdout design on public data, and compare it with last-click attribution."
+  result: Proposed concept. Not started.
+  resultStatus: target
+summary:
+  problem: >-
+    Channel dashboards credit campaigns for sales that would have happened anyway.
+    Budget decisions need incremental effect.
+  solution: >-
+    Proposed: take a public randomised marketing dataset, estimate lift with confidence
+    intervals, check sample ratio and pre-period balance, and show how the same
+    campaign looks under last-click attribution.
+  outcome: Not started. This page describes a plan.
+context:
+  text: Proposed independent project extending the A/B test evaluation work at The Prink onto data that can be shared.
+contribution:
+  text: Would be sole author.
+data:
+  points:
+    - "Candidate: a public randomised uplift dataset such as the Criteo Uplift dataset or the Hillstrom email campaign data."
+architecture:
+  caption: Planned analysis flow.
+  stages:
+    - label: Randomised dataset
+    - label: Balance and sample ratio checks
+    - label: Lift estimate
+      detail: With confidence interval
+    - label: Attribution comparison
+      detail: Last-click view of the same data
+    - label: Decision memo
+implementation:
+  points:
+    - Plan the analysis before looking at outcomes, including the primary metric and minimum detectable effect.
+    - Report lift by segment only where pre-specified.
+validation:
+  points:
+    - Sample ratio mismatch test.
+    - A/A check on pre-period data.
+results:
+  text: None. Proposed work.
+limitations:
+  points:
+    - Public datasets lack the cost data needed for a full return-on-spend view.
+nextSteps:
+  - Choose the dataset and write the analysis plan.

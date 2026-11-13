@@ -1,0 +1,98 @@
+title: Customer segmentation and churn analysis
+order: 4
+kind: professional
+status: completed
+employer: whirldata
+period: Feb 2019 to Mar 2020
+domains: [Customer Analytics]
+projectType: Customer analytics
+technologies: [SQL, Python, Segmentation, JIRA, Confluence]
+preview: segments
+card:
+  problem: Customers were leaving and the business could not see which groups were at risk or what was driving them away.
+  solution: Segmented customers by behaviour, analysed churn across segments and recommended actions on service friction and retention.
+  result: Retention recommendations delivered. Churn figures not yet documented.
+  resultStatus: draft
+summary:
+  problem: >-
+    Stakeholders needed to understand how customer groups differed in behaviour and
+    which were most likely to churn, so that retention effort went where it mattered.
+  solution: >-
+    Using SQL and Python, I applied customer segmentation and churn analysis to compare
+    behaviour across groups, and recommended actions addressing service friction,
+    retention and customer experience.
+  outcome: >-
+    Recommendations were delivered and reporting enhancements were validated in pilot
+    deployments. Churn and retention figures have not been documented here yet.
+context:
+  text: Business, product and engineering teams working on customer experience and retention.
+  needs:
+    - The product or service the customers used
+    - Which team acted on the recommendations
+contribution:
+  text: >-
+    I ran the querying, segmentation and churn analysis and wrote the recommendations,
+    then validated the resulting reporting changes during pilots.
+  needs:
+    - Which retention actions were taken by others
+data:
+  points:
+    - Customer and operational datasets queried with SQL and Python.
+  needs:
+    - Number of customers, time period and the behavioural fields available
+    - Definition of churn (for example no activity for N days, cancelled subscription)
+    - Known quality issues
+architecture:
+  caption: Analysis flow reconstructed from the résumé description.
+  stages:
+    - label: Customer and operational data
+      detail: SQL extraction
+    - label: Preparation
+      detail: Python, reconciled against source
+    - label: Segmentation
+      detail: Behavioural groups
+    - label: Churn analysis
+      detail: Compared across segments
+    - label: Recommendations
+      detail: Service friction and retention
+    - label: Pilot validation
+      detail: Reporting checked with stakeholders
+implementation:
+  points:
+    - Segments were compared on behaviour to find where service friction concentrated.
+    - Requirements and workflows were documented in JIRA and Confluence so product and engineering teams could track the changes.
+  needs:
+    - Segmentation method (rule-based, RFM, clustering) and number of segments
+    - Whether churn was analysed descriptively or with a predictive model, and if so which model and baseline
+details:
+  - title: If a predictive churn model was used
+    body: >-
+      Document the baseline (for example overall churn rate or a simple rule), the
+      train and test split by time, how features were limited to information available
+      before the churn window to prevent leakage, and metrics such as recall at a fixed
+      contact budget. Leave this section out if the analysis was descriptive.
+validation:
+  points:
+    - Source data reconciled before recurring reports were issued.
+    - Reporting outputs validated during pilot deployments, with stakeholder feedback incorporated and early results assessed.
+results:
+  text: Recommendations addressed service friction, retention and customer experience. Outcome figures are not published until confirmed.
+metrics:
+  - name: Churn rate by segment
+    status: draft
+    needs:
+      - Segment names, churn rate for each, population and period
+  - name: Retention change after recommended actions
+    status: draft
+    needs:
+      - Baseline and final values, period, and whether a comparison group existed
+limitations:
+  points:
+    - Without a comparison group, a change in retention after an action cannot be attributed to that action.
+    - Client data cannot be shared.
+nextSteps:
+  - See the independent persona builder for a current, reproducible version of this method.
+evidence:
+  - label: Résumé entry for Whirldata
+    type: Résumé
+    note: Source for every statement on this page.

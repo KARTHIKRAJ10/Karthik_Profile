@@ -1,0 +1,69 @@
+employer: The Prink
+role: Data Analyst
+start: "2020-09"
+end: "2022-10"
+location: Trichy, India
+industry: Ecommerce
+track: analytics
+domains: [Marketing Analytics, Analytics and Reporting]
+summary: >-
+  Connected GA4, Shopify, CRM and transaction data to explain sales trends and customer
+  behaviour, built the dashboards used in recurring KPI reviews, and evaluated A/B tests
+  for website changes.
+highlight: Joined four data sources into dashboards reconciled against source totals.
+context:
+  text: >-
+    An ecommerce business needed to see how campaign activity, customer behaviour and
+    sales related to each other, and to decide which website changes were worth keeping.
+    The data sat in GA4, Shopify, a CRM and transaction records.
+  needs:
+    - Product category and rough scale of the business (orders or sessions per month)
+    - Who attended the KPI reviews and how often they ran
+    - The commercial goals for the period
+responsibilities:
+  - Analyzed GA4, Shopify, CRM and transaction data to explain sales trends, customer behaviour and opportunities to improve ecommerce commercial performance.
+  - Built Power BI and Looker Studio dashboards connecting campaign activity, customer behaviour and sales results for recurring KPI reviews and commercial decisions.
+  - Evaluated A/B tests and performance scenarios, comparing audience outcomes and translating findings into recommendations for website improvements.
+  - Reconciled dashboard measures against source totals, investigating discrepancies to strengthen the accuracy of campaign and sales reporting.
+  - Prepared Excel and CSV datasets, checking product attributes, dates, channel labels and missing values for downstream analysis.
+contribution:
+  text: >-
+    Analysis, dashboard builds, test evaluation and reconciliation were my
+    responsibilities. Decisions on campaigns and website changes were made by the
+    stakeholders who used the reporting.
+  needs:
+    - Whether you were the only analyst or part of a team
+    - Which recommendations were adopted
+problems:
+  points:
+    - What explained a change in sales, and which customers or channels drove it.
+    - Whether a website variant performed better for the audiences tested.
+    - Why a dashboard figure differed from the source system total.
+  needs:
+    - A specific recommendation and what happened after it
+tools: [GA4, Shopify, Power BI, Looker Studio, Excel, CRM data]
+methods:
+  - Multi-source KPI modelling
+  - A/B test evaluation
+  - Dashboard-to-source reconciliation
+  - Data preparation and attribute checks
+achievements:
+  - name: Data sources combined in reporting
+    value: "4"
+    unit: sources
+    method: GA4, Shopify, CRM and transaction data
+    source: Résumé
+    status: reported
+  - name: Effect of adopted website recommendations
+    status: draft
+    needs:
+      - Metric tested (for example conversion rate), control and variant values
+      - Sample size, test duration and how significance was assessed
+  - name: Reporting accuracy after reconciliation
+    status: draft
+    needs:
+      - Size of discrepancies found between dashboard and source totals, before and after
+skills: [Marketing analytics, Dashboard design, Experiment evaluation, Reconciliation, Data preparation, Commercial storytelling]
+lessons:
+  needs:
+    - Two or three lessons from this role, in your own words

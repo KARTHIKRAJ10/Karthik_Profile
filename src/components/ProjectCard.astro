@@ -1,0 +1,82 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ProjectPreview from './ProjectPreview.astro';
+import StatusTag from './StatusTag.astro';
+import { completionLabel, href, kindLabel } from '../lib/utils';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  employerName?: string;
+  compact?: boolean;
+}
+const { project, employerName, compact = false } = Astro.props;
+const p = project.data;
+const searchText = [p.title, p.card.problem, p.card.solution, p.projectType, employerName ?? '', ...p.technologies, ...p.domains]
+  .join(' ')
+  .toLowerCase();
+---
+
+<article
+  class="project card"
+  data-card
+  data-domain={p.domains.join('|')}
+  data-tech={p.technologies.join('|')}
+  data-type={p.projectType}
+  data-kind={p.kind}
+  data-status={p.status}
+  data-text={searchText}
+>
+  <ProjectPreview type={p.preview} />
+  <div class="body">
+    <p class="meta">
+      <span class={`kind kind-${p.kind}`}>{kindLabel[p.kind]}</span>
+      {employerName && <span>{employerName}</span>}
+      <span>{completionLabel[p.status]}</span>
+    </p>
+    <h3><a href={href(`/projects/${project.id}/`)}>{p.title}</a></h3>
+    {p.usesSyntheticData && <p class="synthetic">Uses synthetic data</p>}
+    <dl>
+      <div>
+        <dt>Problem</dt>
+        <dd>{p.card.problem}</dd>
+      </div>
+      {
+        !compact && (
+          <div>
+            <dt>Solution</dt>
+            <dd>{p.card.solution}</dd>
+          </div>
+        )
+      }
+      <div>
+        <dt>Result</dt>
+        <dd>
+          {p.card.result}
+          <span class="status-line"><StatusTag status={p.card.resultStatus} /></span>
+        </dd>
+      </div>
+    </dl>
+    <ul class="tag-list" aria-label="Technologies">
+      {p.technologies.slice(0, compact ? 4 : 6).map((t) => <li class="tag">{t}</li>)}
+    </ul>
+  </div>
+</article>
+
+<style>
+  .project { position: relative; display: flex; flex-direction: column; transition: border-color 0.15s; }
+  .project:hover, .project:focus-within { border-color: var(--accent); }
+  .body { padding: var(--space-4) var(--space-5) var(--space-5); display: grid; gap: var(--space-3); align-content: start; flex: 1; }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.15rem var(--space-3); font-size: 0.8125rem; color: var(--ink-2); }
+  .kind { font-weight: 650; color: var(--ink); }
+  .kind-concept { color: var(--ink-2); font-style: italic; }
+  h3 { font-size: 1.25rem; }
+  h3 a { color: var(--ink); text-decoration: none; }
+  h3 a::after { content: ''; position: absolute; inset: 0; }
+  h3 a:hover { color: var(--accent); }
+  .synthetic { font-size: 0.8125rem; font-weight: 600; color: var(--sim); }
+  dl { margin: 0; display: grid; gap: var(--space-3); font-size: 0.9375rem; }
+  dt { font-size: 0.8125rem; font-weight: 600; color: var(--ink-3); }
+  dd { margin: 0; color: var(--ink-2); }
+  .status-line { display: block; margin-top: 0.4rem; }
+  .tag-list { margin-top: auto; padding-top: var(--space-2); }
+</style>
